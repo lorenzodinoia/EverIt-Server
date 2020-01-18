@@ -13,20 +13,20 @@ class CreateRestaurateursTable extends Migration
      */
     public function up()
     {
-        Schema::create('Restaurateurs', function (Blueprint $table) {
+        Schema::create('restaurateurs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('shopName');
+            $table->string('shop_name');
             $table->string('address');
             $table->string('cap', 5);
             $table->string('phone_number', 15);
-            $table->string('email', 50);
+            $table->string('email');
             $table->string('password');
             $table->string('piva', 11);
             $table->text('description')->nullable();
             $table->float('delivery_cost', 4, 2)->default(0);
             $table->integer('min_quantity')->default(1)->unsigned();
             $table->integer('order_range_time')->default(10)->unsigned();
-            $table->string('image_path');
+            $table->string('image_path')->nullable();
             $table->unsignedBigInteger('shop_type_id');
             $table->unsignedBigInteger('city_id');
             $table->rememberToken();

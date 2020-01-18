@@ -8,78 +8,65 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Create new order
      */
-    public function index()
-    {
-        //
+    public function create(Request $request) {
+        if (Order::checkCreateRequest($request)) {
+
+        }
+        else {
+            return response()->json(null, HttpResponseCode::BAD_REQUEST);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get details for a given order
      */
-    public function create()
-    {
-        //
+    public function read($id) {
+
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Get current logged in customer's order list
      */
-    public function store(Request $request)
-    {
-        //
+    public function readCustomerOrders() {
+
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
+     * Get the list of in progress order for the current logged in customer
      */
-    public function show(Order $order)
-    {
-        //
+    public function readCustomerInProgressOrders() {
+
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
+     * Mark an order as delivered by ID and validation code
+     * The rider must be logged in
      */
-    public function edit(Order $order)
-    {
-        //
+    public function close($id, $validationCode) {
+        
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
+     *  Get current logged in restaurateur's order list 
      */
-    public function update(Request $request, Order $order)
-    {
-        //
+    public function readRestaurateurOrders() {
+
+    }
+
+     /**
+     * Get the list of in progress order for the current logged in restaurateur
+     */
+    public function readRestaurateurInProgressOrders() {
+
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
+     * Mark an order as in delivering
+     * The restaurateur must be logged in
      */
-    public function destroy(Order $order)
-    {
-        //
+    public function markAsInDelivering($orderId) {
+
     }
 }

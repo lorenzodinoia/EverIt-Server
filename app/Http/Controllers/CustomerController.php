@@ -4,82 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use Illuminate\Http\Request;
+use App\HttpResponseCode;
 
 class CustomerController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Create new customer
      */
-    public function index()
-    {
-        //
+    public function create(Request $request) {
+        if (Customer::checkCreateRequest($request)) {
+
+        }
+        else {
+            return response()->json(null, HttpResponseCode::BAD_REQUEST);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get details of the current logged in customer
      */
-    public function create()
-    {
-        //
+    public function readCurrent() {
+
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Update data of the current logged in customer
      */
-    public function store(Request $request)
-    {
-        //
+    public function update(Request $newData) {
+
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * Delete the account of the current logged in customer
      */
-    public function show(Customer $customer)
-    {
-        //
+    public function delete() {
+
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * Log in a customer by email and password
+     * In case of success the remember_token must be setted and returned in the resposne
      */
-    public function edit(Customer $customer)
-    {
-        //
+    public function login($email, $password) {
+
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * Log out the current logged in customer
+     * In case of success the remeber_token must be removed
      */
-    public function update(Request $request, Customer $customer)
-    {
-        //
-    }
+    public function logout() {
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Customer $customer)
-    {
-        //
     }
 }

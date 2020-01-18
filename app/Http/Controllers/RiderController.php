@@ -8,78 +8,58 @@ use Illuminate\Http\Request;
 class RiderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Create new rider
      */
-    public function index()
-    {
-        //
+    public function create(Request $request) {
+        if (Rider::checkCreateRequest($request)) {
+
+        }
+        else {
+            return response()->json(null, HttpResponseCode::BAD_REQUEST);
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get details for a given rider
      */
-    public function create()
-    {
-        //
+    public function read($id) {
+
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Get details of the current logged in rider
      */
-    public function store(Request $request)
-    {
-        //
+    public function readCurrent() {
+
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Rider  $rider
-     * @return \Illuminate\Http\Response
+     * Update data of the current logged in rider
      */
-    public function show(Rider $rider)
-    {
-        //
+    public function update(Request $newData) {
+
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Rider  $rider
-     * @return \Illuminate\Http\Response
+     * Delete the account of the current logged in rider
      */
-    public function edit(Rider $rider)
-    {
-        //
+    public function delete() {
+
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Rider  $rider
-     * @return \Illuminate\Http\Response
+     * Log in a rider by email and password
+     * In case of success the remember_token must be setted and returned in the resposne
      */
-    public function update(Request $request, Rider $rider)
-    {
-        //
+    public function login($email, $password) {
+
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Rider  $rider
-     * @return \Illuminate\Http\Response
+     * Log out the current logged in rider
+     * In case of success the remeber_token must be removed
      */
-    public function destroy(Rider $rider)
-    {
-        //
+    public function logout() {
+
     }
 }
