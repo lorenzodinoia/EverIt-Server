@@ -19,7 +19,7 @@ class CreateRestaurateursTable extends Migration
             $table->string('address');
             $table->string('cap', 5);
             $table->string('phone_number', 15);
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('piva', 11);
             $table->text('description')->nullable();
