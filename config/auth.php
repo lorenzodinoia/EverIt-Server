@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'customer',
         'passwords' => 'users',
     ],
 
@@ -38,12 +38,27 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'customers',
         ],
 
-        'api' => [
+        'customer' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'customers',
+            'storage_key' => 'remember_token',
+            'hash' => false,
+        ],
+
+        'restaurateur' => [
+            'driver' => 'token',
+            'provider' => 'restaurateurs',
+            'storage_key' => 'remember_token',
+            'hash' => false,
+        ],
+
+        'rider' => [
+            'driver' => 'token',
+            'provider' => 'riders',
+            'storage_key' => 'remember_token',
             'hash' => false,
         ],
     ],
@@ -66,15 +81,20 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'customers' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Customer::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'restaurateurs' => [
+            'driver' => 'eloquent',
+            'model' => App\Restaurateur::class,
+        ],
+
+        'riders' => [
+            'driver' => 'eloquent',
+            'model' => App\Rider::class,
+        ],
     ],
 
     /*

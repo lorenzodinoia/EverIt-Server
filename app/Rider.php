@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Validator;
 
 class Rider extends Model
 {
-    protected $guarded = ['password', 'remeber_token'];
-    protected $hidden = ['remeber_token', 'password'];
+    protected $guarded = ['password', 'remember_token'];
+    protected $hidden = ['remember_token', 'password'];
 
     /**
      * Password field setter

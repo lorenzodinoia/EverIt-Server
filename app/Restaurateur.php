@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class Restaurateur extends Model
 {
-    protected $guarded = ['password', 'remeber_token', 'image_path'];
-    protected $hidden = ['remeber_token', 'password'];
+    protected $guarded = ['password', 'remember_token', 'image_path'];
+    protected $hidden = ['remember_token', 'password'];
 
     /**
      * Password field setter
