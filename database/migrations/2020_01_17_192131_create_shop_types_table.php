@@ -16,7 +16,6 @@ class CreateShopTypesTable extends Migration
         Schema::create('shop_types', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 100);
-            $table->timestamps();
         });
     }
 

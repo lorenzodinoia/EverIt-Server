@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShopType extends Model
 {
+    public $timestamps = false;
+    
     /**
      * Define one (shop type) to many (restaurateurs) relationship
      */
