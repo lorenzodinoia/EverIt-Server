@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\City;
 
 class CitySeeder extends Seeder
 {
@@ -11,6 +12,14 @@ class CitySeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('cities')->delete();
+        $cities = File::get('database/data/bari.json');
+        $cityList = json_decode($cities);
+        foreach($cityList->cities as $city) {
+            $newCity = City::create([
+                'name' => $city->name . ' '. '(' . $city->country_code . ')'
+            ]);
+            $newCity->save();
+        }
     }
 }

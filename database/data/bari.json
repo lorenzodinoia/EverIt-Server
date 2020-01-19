@@ -1,0 +1,208 @@
+{
+    "cities": [
+        {
+            "name": "Acquaviva delle Fonti",
+            "country_code": "BA"
+        },
+        {
+            "name": "Adelfia",
+            "country_code": "BA"
+        },
+        {
+            "name": "Alberobello",
+            "country_code": "BA"
+        },
+        {
+            "name": "Altamura",
+            "country_code": "BA"
+        },
+        {
+            "name": "Bari",
+            "country_code": "BA"
+        },
+        {
+            "name": "Binetto",
+            "country_code": "BA"
+        },
+        {
+            "name": "Bitetto",
+            "country_code": "BA"
+        },
+        {
+            "name": "Bitonto",
+            "country_code": "BA"
+        },
+        {
+            "name": "Bitritto",
+            "country_code": "BA"
+        },
+        {
+            "name": "Capurso",
+            "country_code": "BA"
+        },
+        {
+            "name": "Casamassima",
+            "country_code": "BA"
+        },
+        {
+            "name": "Cassano delle Murge",
+            "country_code": "BA"
+        },
+        {
+            "name": "Castellana Grotte",
+            "country_code": "BA"
+        },
+        {
+            "name": "Cellamare",
+            "country_code": "BA"
+        },
+        {
+            "name": "Conversano",
+            "country_code": "BA"
+        },
+        {
+            "name": "Corato",
+            "country_code": "BA"
+        },
+        {
+            "name": "Gioia del Colle",
+            "country_code": "BA"
+        },
+        {
+            "name": "Giovinazzo",
+            "country_code": "BA"
+        },
+        {
+            "name": "Gravina in Puglia",
+            "country_code": "BA"
+        },
+        {
+            "name": "Grumo Appula",
+            "country_code": "BA"
+        },
+        {
+            "name": "Locorotondo",
+            "country_code": "BA"
+        },
+        {
+            "name": "Modugno",
+            "country_code": "BA"
+        },
+        {
+            "name": "Mola di Bari",
+            "country_code": "BA"
+        },
+        {
+            "name": "Molfetta",
+            "country_code": "BA"
+        },
+        {
+            "name": "Monopoli",
+            "country_code": "BA"
+        },
+        {
+            "name": "Noci",
+            "country_code": "BA"
+        },
+        {
+            "name": "Noicattaro",
+            "country_code": "BA"
+        },
+        {
+            "name": "Palo del Colle",
+            "country_code": "BA"
+        },
+        {
+            "name": "Poggiorsini",
+            "country_code": "BA"
+        },
+        {
+            "name": "Polignano a Mare",
+            "country_code": "BA"
+        },
+        {
+            "name": "Putignano",
+            "country_code": "BA"
+        },
+        {
+            "name": "Rutigliano",
+            "country_code": "BA"
+        },
+        {
+            "name": "Ruvo di Puglia",
+            "country_code": "BA"
+        },
+        {
+            "name": "Sammichele di Bari",
+            "country_code": "BA"
+        },
+        {
+            "name": "Sannicandro di Bari",
+            "country_code": "BA"
+        },
+        {
+            "name": "Santeramo in Colle",
+            "country_code": "BA"
+        },
+        {
+            "name": "Terlizzi",
+            "country_code": "BA"
+        },
+        {
+            "name": "Toritto",
+            "country_code": "BA"
+        },
+        {
+            "name": "Triggiano",
+            "country_code": "BA"
+        },
+        {
+            "name": "Turi",
+            "country_code": "BA"
+        },
+        {
+            "name": "Valenzano",
+            "country_code": "BA"
+        },
+        {
+            "name": "Andria",
+            "country_code": "BT"
+        },
+        {
+            "name": "Barletta",
+            "country_code": "BT"
+        },
+        {
+            "name": "Bisceglie",
+            "country_code": "BT"
+        },
+        {
+            "name": "Canosa di Puglia",
+            "country_code": "BT"
+        },
+        {
+            "name": "Margherita di Savoia",
+            "country_code": "BT"
+        },
+        {
+            "name": "Minervino Murge",
+            "country_code": "BT"
+        },
+        {
+            "name": "San Ferdinando di Puglia",
+            "country_code": "BT"
+        },
+        {
+            "name": "Spinazzola",
+            "country_code": "BT"
+        },
+        {
+            "name": "Trani",
+            "country_code": "BT"
+        },
+        {
+            "name": "Trinitapoli",
+            "country_code": "BT"
+        }
+    ]
+}
