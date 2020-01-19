@@ -78,7 +78,7 @@ class Customer extends Authenticatable
      */
     public static function attemptLogin($email, $password) {
         $customer = Customer::where('email', $email)->first();
-        if(Hash::check($password, $customer->makeVisible('password')->password)) {
+        if(isset($customer) && Hash::check($password, $customer->makeVisible('password')->password)) {
             return $customer->makeHidden('password');
         }
         else {

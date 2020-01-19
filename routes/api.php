@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 */
 
 const CUSTOMER = '/customer';
+const RESTAURATEUR = '/restaurateur';
+const RIDER = '/rider';
 
 Route::post(CUSTOMER, 'CustomerController@create');
 Route::post(CUSTOMER.'/login', 'CustomerController@login');
@@ -22,3 +24,16 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::get(CUSTOMER, 'CustomerController@readCurrent');
 });
 
+Route::post(RESTAURATEUR, 'RestaurateurController@create');
+Route::post(RESTAURATEUR.'/login', 'RestaurateurController@login');
+Route::middleware(['auth:restaurateur'])->group(function () {
+    Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
+    Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
+});
+
+Route::post(RIDER, 'RiderController@create');
+Route::post(RIDER.'/login', 'RiderController@login');
+Route::middleware(['auth:rider'])->group(function () {
+    Route::post(RIDER.'/logout', 'RiderController@logout');
+    Route::get(RIDER, 'RiderController@readCurrent');
+});

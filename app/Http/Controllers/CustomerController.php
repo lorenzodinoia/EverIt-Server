@@ -35,7 +35,18 @@ class CustomerController extends Controller
      * Get details of the current logged in customer
      */
     public function readCurrent() {
-        return response()->json(Auth::guard('customer')->user());
+        $customer = Auth::guard('customer')->user();
+
+        if(isset($customer)) {
+            $message = $customer;
+            $code = HttpResponseCode::OK;
+        }
+        else {
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 
     /**
@@ -81,7 +92,7 @@ class CustomerController extends Controller
             $code = HttpResponseCode::OK;
         }
         else {
-            $messaggio = ['message' => 'User not recognized'];
+            $message = ['message' => 'User not recognized'];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

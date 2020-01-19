@@ -2,12 +2,14 @@
 
 namespace App;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
-use Illimunate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
-class Restaurateur extends Model
+class Restaurateur extends Authenticatable
 {
     protected $guarded = ['password', 'remember_token', 'image_path'];
     protected $hidden = ['remember_token', 'password'];
@@ -71,5 +73,41 @@ class Restaurateur extends Model
         ];
 
         return (!Validator::make($request->all(), $rules)->fails());        
+    }
+
+    /**
+     * Set the remember_token
+     */
+    public function setApiToken() {
+        $token = Str::random(60);
+
+        $this->makeVisible('remember_token')->remember_token = $token;
+        $this->makeHidden('remember_token');
+        $this->save();
+
+        return $token;
+    }
+
+    /**
+     * Invalidate the remember_token
+     */
+    public function removeApiToken() {
+        $this->makeVisible('remember_token')->remember_token = null;
+        $this->makeHidden('remember_token');
+        $this->save();
+    }
+
+    /**
+     * Attempt login retriving a restaurateur by email and password
+     * If email and password are correct, the restaurateur is returned. Returns null otherwise
+     */
+    public static function attemptLogin($email, $password) {
+        $restaurateur = Restaurateur::where('email', $email)->first();
+        if(isset($restaurateur) && Hash::check($password, $restaurateur->makeVisible('password')->password)) {
+            return $restaurateur->makeHidden('password');
+        }
+        else {
+            return null;
+        }
     }
 }
