@@ -65,14 +65,23 @@ class Restaurateur extends Authenticatable
             'password' => 'required|string',
             'piva' => 'required|string|between:1,11',
             'description' => 'string',
-            'delivery_cost' => 'numeric',
+            'delivery_cost' => 'required|numeric',
             'min_quantity' => 'numeric',
             'order_range_time' => 'numeric',
             'shop_type_id' => 'required|integer',
             'city_id' => 'required|integer'
         ];
 
-        return (!Validator::make($request->all(), $rules)->fails());        
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string',
+            'between' => ':attribute must be between :min and :max',
+            'email' => ':attribute must respect email standard',
+            'numeric' => ':attribute must be numeric',
+            'integer' => ':attribute must be integer'
+        ];
+
+        return Validator::make($request->all(), $rules, $message);
     }
 
     /**

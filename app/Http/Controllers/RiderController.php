@@ -13,7 +13,8 @@ class RiderController extends Controller
      * Create new rider
      */
     public function create(Request $request) {
-        if (Rider::checkCreateRequest($request)) {
+        $validator = Rider::checkCreateRequest($request);
+        if (!$validator->fails()) {
             $createdRider = new Rider;
 
             $createdRider->name = $request->name;
@@ -24,18 +25,33 @@ class RiderController extends Controller
 
             $createdRider->save();
 
-            return response()->json(Rider::find($createdRider->id), HttpResponseCode::CREATED);
+            $message = Rider::find($createdRider->id);
+            $code = HttpResponseCode::CREATED;
+
         }
         else {
-            return response()->json(null, HttpResponseCode::BAD_REQUEST);
+            $message = $validator->errors();
+            $code = HttpResponseCode::BAD_REQUEST;
         }
+
+        return response()->json($message, $code);
     }
 
     /**
      * Get details for a given rider
      */
     public function read($id) {
+        $rider = Rider::find($id);
+        if(isset($rider)){
+            $message = $rider;
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = "Can't find rider";
+            $code = HttpResponseCode::BAD_REQUEST;
+        }
 
+        return response()->json($message, $code);
     }
 
     /**
@@ -61,13 +77,59 @@ class RiderController extends Controller
      */
     public function update(Request $newData) {
 
+        $rider = Auth::guard('rider')->user();
+        $id = $rider->id;
+
+        if(isset($rider)){
+            $validator = Rider::checkCreateRequest($newData);
+            if(!$validator->fails()){
+                $rider->name = $newData->name;
+                $rider->surname = $newData->surname;
+                $rider->phone_number = $newData->phone_number;
+                $rider->email = $newData->email;
+                $rider->password = $newData->password;
+
+                $rider->save();
+
+                $message = Rider::find($id);
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = $validator->errors();
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 
     /**
      * Delete the account of the current logged in rider
      */
     public function delete() {
+        $rider = Auth::guard('rider')->user();
 
+        if(isset($rider)){
+            $deleted = $rider->delete();
+            if($deleted){
+                $message = "Deleted";
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = "Can't delete rider";
+                $code = HttpResponseCode::SERVER_ERROR;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 
     /**
@@ -79,7 +141,7 @@ class RiderController extends Controller
         if(isset($rider)) {
             $token = $rider->setApiToken();
             $header = ['Authorization' => 'Bearer '.$token];
-            
+
             return response()->json($rider, HttpResponseCode::OK, $header);
         }
         else {

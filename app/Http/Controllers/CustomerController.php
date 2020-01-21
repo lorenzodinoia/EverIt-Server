@@ -13,7 +13,8 @@ class CustomerController extends Controller
      * Create new customer
      */
     public function create(Request $request) {
-        if (Customer::checkCreateRequest($request)) {
+        $validator = Customer::checkCreateRequest($request);
+        if (!$validator->fails()) {
             $createdCustomer = new Customer;
 
             $createdCustomer->name = $request->name;
@@ -23,12 +24,16 @@ class CustomerController extends Controller
             $createdCustomer->password = $request->password;
 
             $createdCustomer->save();
+            $message = Customer::find($createdCustomer->id);
+            $code = HttpResponseCode::CREATED;
 
-            return response()->json(Customer::find($createdCustomer->id), HttpResponseCode::CREATED);
         }
         else {
-            return response()->json(null, HttpResponseCode::BAD_REQUEST);
+            $message = $validator->errors();
+            $code = HttpResponseCode::BAD_REQUEST;
         }
+
+        return response()->json($message, $code);
     }
 
     /**
@@ -53,13 +58,59 @@ class CustomerController extends Controller
      * Update data of the current logged in customer
      */
     public function update(Request $newData) {
+        $customer = Auth::guard('customer')->user();
+        $id =  $customer->id;
 
+        if(isset($customer)){
+            $validator = Customer::checkCreateRequest($newData);
+            if(!$validator->fails()){
+                $customer->name = $newData->name;
+                $customer->surname = $newData->surname;
+                $customer->phone_number = $newData->phone_number;
+                $customer->email = $newData->email;
+                $customer->password = $newData->password;
+
+                $customer->save();
+
+                $message = Customer::find($id);
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = $validator->errors();
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 
     /**
      * Delete the account of the current logged in customer
      */
     public function delete() {
+        $customer = Auth::guard('customer')->user();
+
+        if(isset($customer)){
+            $deleted = $customer->delete();
+            if($deleted){
+                $message = "Deleted";
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = "Can't delete customer";
+                $code = HttpResponseCode::SERVER_ERROR;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
 
     }
 
@@ -72,7 +123,7 @@ class CustomerController extends Controller
         if(isset($customer)) {
             $token = $customer->setApiToken();
             $header = ['Authorization' => 'Bearer '.$token];
-            
+
             return response()->json($customer, HttpResponseCode::OK, $header);
         }
         else {

@@ -48,8 +48,14 @@ class Customer extends Authenticatable
             'email' => 'required|email',
             'password' => 'required|string',
         ];
+        $message = [
+          'required' => ':attribute required',
+          'string' => ':attribute must be string',
+          'between' => ':attribute must be between :min and :max',
+          'email' => ':attribute must respect email standard'
+        ];
 
-        return (!Validator::make($request->all(), $rules)->fails());        
+        return Validator::make($request->all(), $rules, $message);
     }
 
     /**
@@ -59,6 +65,7 @@ class Customer extends Authenticatable
         $token = Str::random(60);
 
         $this->makeVisible('remember_token')->remember_token = $token;
+        $this->makeHidden('remember_token');
         $this->save();
 
         return $token;

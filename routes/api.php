@@ -22,18 +22,26 @@ Route::post(CUSTOMER.'/login', 'CustomerController@login');
 Route::middleware(['auth:customer'])->group(function () {
     Route::post(CUSTOMER.'/logout', 'CustomerController@logout');
     Route::get(CUSTOMER, 'CustomerController@readCurrent');
+    Route::put(CUSTOMER.'/update', 'CustomerController@update');
+    Route::delete(CUSTOMER.'/delete', 'CustomerController@delete');
 });
 
 Route::post(RESTAURATEUR, 'RestaurateurController@create');
 Route::post(RESTAURATEUR.'/login', 'RestaurateurController@login');
+Route::get(RESTAURATEUR.'/read/{id}','RestaurateurController@read');
 Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
+    Route::put(RESTAURATEUR.'/update', 'RestaurateurController@update');
+    Route::delete(RESTAURATEUR.'/delete', 'RestaurateurController@delete');
 });
 
 Route::post(RIDER, 'RiderController@create');
 Route::post(RIDER.'/login', 'RiderController@login');
+Route::get(RIDER.'/read/{id}','RiderController@read');
 Route::middleware(['auth:rider'])->group(function () {
     Route::post(RIDER.'/logout', 'RiderController@logout');
     Route::get(RIDER, 'RiderController@readCurrent');
+    Route::put(RIDER.'/update', 'RiderController@update');
+    Route::delete(RIDER.'/delete', 'RiderController@delete');
 });

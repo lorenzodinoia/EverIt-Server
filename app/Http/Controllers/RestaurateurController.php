@@ -15,7 +15,8 @@ class RestaurateurController extends Controller
      * Create new restaurateur
      */
     public function create(Request $request) {
-        if (Restaurateur::checkCreateRequest($request)) {
+        $validator = Restaurateur::checkCreateRequest($request);
+        if (!$validator->fails()) {
             $cretedRestaurateur = new Restaurateur;
 
             $cretedRestaurateur->shop_name = $request->shop_name;
@@ -56,9 +57,10 @@ class RestaurateurController extends Controller
             }
 
             $cretedRestaurateur->save();
+            return response()->json(Restaurateur::find($cretedRestaurateur->id), HttpResponseCode::OK);
         }
         else {
-            return response()->json(null, HttpResponseCode::BAD_REQUEST);
+            return response()->json($validator->errors(), HttpResponseCode::BAD_REQUEST);
         }
     }
 
@@ -66,7 +68,17 @@ class RestaurateurController extends Controller
      * Get details for a given restaurateur
      */
     public function read($id) {
+        $restaurateur = Restaurateur::find($id);
+        if(isset($restaurateur)){
+            $message = $restaurateur;
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = "Can't find commercial activity";
+            $code = HttpResponseCode::BAD_REQUEST;
+        }
 
+        return response()->json($message, $code);
     }
 
     /**
@@ -91,14 +103,83 @@ class RestaurateurController extends Controller
      * Update data of the current logged in restaurateur
      */
     public function update(Request $newData) {
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)) {
+            $id = $restaurateur->id;
+            $validator = Restaurateur::checkCreateRequest($newData);
+            if(!$validator->fails()){
+                $restaurateur->shop_name = $newData->shop_name;
+                $restaurateur->address = $newData->address;
+                $restaurateur->cap = $newData->cap;
+                $restaurateur->phone_number = $newData->phone_number;
+                $restaurateur->email = $newData->email;
+                $restaurateur->password = $newData->password;
+                $restaurateur->piva = $newData->piva;
+                if(isset($newData->description)){
+                    $restaurateur->description = $newData->description;
+                }
+                $restaurateur->delivery_cost = $newData->delivery_cost;
+                if(isset($newData->min_quantity)) {
+                    $restaurateur->min_quantity = $newData->min_quantity;
+                }
+                if(isset($newData->order_range_time)) {
+                    $restaurateur->order_range_time = $newData->order_range_time;
+                }
+                $city = City::find($newData->city_id);
+                if(isset($city)) {
+                    $restaurateur->city()->associate($city);
+                }
+                else {
+                    return response()->json(['message' => 'Unable to attach city'], HttpResponseCode::BAD_REQUEST);
+                }
+                $shopType = ShopType::find($newData->shop_type_id);
+                if(isset($shopType)) {
+                    $restaurateur->shopType()->associate($shopType);
+                }
+                else {
+                    return response()->json(['message' => 'Unable to attach shop type'], HttpResponseCode::BAD_REQUEST);
+                }
 
+                $restaurateur->save();
+                $message = Restaurateur::find($id);
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = $validator->errors();
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 
     /**
      * Delete the account of the current logged in restaurateur
      */
     public function delete() {
+        $restaurateur = Auth::guard('restaurateur')->user();
 
+        if(isset($restaurateur)){
+            $deleted = $restaurateur->delete();
+            if($deleted){
+                $message = "Deleted";
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = "Can't delete customer";
+                $code = HttpResponseCode::SERVER_ERROR;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 
     /**
@@ -110,7 +191,7 @@ class RestaurateurController extends Controller
         if(isset($restaurateur)) {
             $token = $restaurateur->setApiToken();
             $header = ['Authorization' => 'Bearer '.$token];
-            
+
             return response()->json($restaurateur, HttpResponseCode::OK, $header);
         }
         else {
