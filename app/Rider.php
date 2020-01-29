@@ -34,9 +34,16 @@ class Rider extends Authenticatable
      * Check if the request is well formatted using the method of Customer model because they have the same structure
      */
     public static function checkCreateRequest(Request $request) {
-        return Customer::checkCreateRequest($request);      
+        return Customer::checkCreateRequest($request);
     }
-    
+
+    /**
+     * Check if the request is well formatted using the method of Customer model because they have the same structure
+     */
+    public static function checkUpdateRequest(Request $request) {
+        return Customer::checkUpdateRequest($request);
+    }
+
     /**
      * Set the remember_token
      */
@@ -58,7 +65,7 @@ class Rider extends Authenticatable
         $this->makeHidden('remember_token');
         $this->save();
     }
-    
+
     /**
      * Attempt login retriving a customer by email and password
      * If email and password are correct, the customer is returned. Returns null otherwise

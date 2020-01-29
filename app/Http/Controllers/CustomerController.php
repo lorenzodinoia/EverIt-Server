@@ -62,7 +62,7 @@ class CustomerController extends Controller
         $id =  $customer->id;
 
         if(isset($customer)){
-            $validator = Customer::checkCreateRequest($newData);
+            $validator = Customer::checkUpdateRequest($newData);
             if(!$validator->fails()){
                 $customer->name = $newData->name;
                 $customer->surname = $newData->surname;

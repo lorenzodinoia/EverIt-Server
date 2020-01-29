@@ -106,14 +106,16 @@ class RestaurateurController extends Controller
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {
             $id = $restaurateur->id;
-            $validator = Restaurateur::checkCreateRequest($newData);
+            $validator = Restaurateur::checkUpdateRequest($newData);
             if(!$validator->fails()){
                 $restaurateur->shop_name = $newData->shop_name;
                 $restaurateur->address = $newData->address;
                 $restaurateur->cap = $newData->cap;
                 $restaurateur->phone_number = $newData->phone_number;
                 $restaurateur->email = $newData->email;
-                $restaurateur->password = $newData->password;
+                if(isset($newData->password)) {
+                    $restaurateur->password = $newData->password;
+                }
                 $restaurateur->piva = $newData->piva;
                 if(isset($newData->description)){
                     $restaurateur->description = $newData->description;

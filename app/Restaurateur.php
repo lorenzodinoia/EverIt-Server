@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -84,6 +83,34 @@ class Restaurateur extends Authenticatable
         return Validator::make($request->all(), $rules, $message);
     }
 
+    public static function checkUpdateRequest(Request $request) {
+        $rules = [
+            'shop_name' => 'required|string',
+            'address' => 'required|string',
+            'cap' => 'required|string|between:1,5',
+            'phone_number' => 'required|string|between:1,15',
+            'email' => 'required|email',
+            'password' => 'string',
+            'piva' => 'required|string|between:1,11',
+            'description' => 'string',
+            'delivery_cost' => 'required|numeric',
+            'min_quantity' => 'numeric',
+            'order_range_time' => 'numeric',
+            'shop_type_id' => 'required|integer',
+            'city_id' => 'required|integer'
+        ];
+
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string',
+            'between' => ':attribute must be between :min and :max',
+            'email' => ':attribute must respect email standard',
+            'numeric' => ':attribute must be numeric',
+            'integer' => ':attribute must be integer'
+        ];
+
+        return Validator::make($request->all(), $rules, $message);
+    }
     /**
      * Set the remember_token
      */

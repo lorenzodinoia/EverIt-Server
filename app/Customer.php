@@ -59,6 +59,27 @@ class Customer extends Authenticatable
     }
 
     /**
+     * Check if the request is well formatted
+     */
+    public static function checkUpdateRequest(Request $request) {
+        $rules = [
+            'name' => 'required|string|between:1,50',
+            'surname' => 'required|string|between:1,50',
+            'phone_number' => 'required|string|between:1,15',
+            'email' => 'required|email',
+            'password' => 'string',
+        ];
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string',
+            'between' => ':attribute must be between :min and :max',
+            'email' => ':attribute must respect email standard'
+        ];
+
+        return Validator::make($request->all(), $rules, $message);
+    }
+
+    /**
      * Set the remember_token
      */
     public function setApiToken() {

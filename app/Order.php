@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illimunate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class Order extends Model
@@ -47,11 +47,17 @@ class Order extends Model
     public static function checkCreateRequest(Request $request) {
         $rules = [
             'delivery_address' => 'required|string',
-            'surname' => 'required|date_format:Y-m-d H:i:s',
-            'products.*.id' => 'required|integer',
-            'customer_id' => 'required|integer'
+            'estimated_delivery_time' => 'required|date_format:Y-m-d H:i:s',
+            'validation_code' => 'required|integer'
         ];
 
-        return (!Validator::make($request->all(), $rules)->fails());  
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string',
+            'date_format' => ':attribute must respect date format (Y-m-d H:m:s)',
+            'integer' => ':attribute must be integer'
+        ];
+
+        return Validator::make($request->all(), $rules, $message);
     }
 }

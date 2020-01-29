@@ -81,7 +81,7 @@ class RiderController extends Controller
         $id = $rider->id;
 
         if(isset($rider)){
-            $validator = Rider::checkCreateRequest($newData);
+            $validator = Rider::checkUpdateRequest($newData);
             if(!$validator->fails()){
                 $rider->name = $newData->name;
                 $rider->surname = $newData->surname;
