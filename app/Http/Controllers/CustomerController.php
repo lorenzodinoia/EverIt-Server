@@ -122,6 +122,9 @@ class CustomerController extends Controller
         $customer = Customer::attemptLogin($request->email, $request->password);
         if(isset($customer)) {
             $token = $customer->setApiToken();
+            if(isset($request->device_id)) {
+                $customer->setDeviceId($request->device_id);
+            }
             $header = ['Authorization' => 'Bearer '.$token];
 
             return response()->json($customer, HttpResponseCode::OK, $header);
@@ -139,6 +142,7 @@ class CustomerController extends Controller
         $customer = Auth::guard('customer')->user();
         if(isset($customer)) {
             $customer->removeApiToken();
+            $customer->removeDeviceId();
             $message = ['message' => 'Logout'];
             $code = HttpResponseCode::OK;
         }
@@ -148,5 +152,14 @@ class CustomerController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    /**
+     * Test method to send notification
+     */
+    public function testNotification(Request $request, $id) {
+        $customer = Customer::find($id);
+        $result = $customer->sendNotification($request->title, $request->message);
+        return response()->json($result);
     }
 }

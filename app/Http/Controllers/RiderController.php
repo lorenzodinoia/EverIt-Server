@@ -140,6 +140,9 @@ class RiderController extends Controller
         $rider = Rider::attemptLogin($request->email, $request->password);
         if(isset($rider)) {
             $token = $rider->setApiToken();
+            if(isset($request->device_id)) {
+                $rider->setDeviceId($request->device_id);
+            }
             $header = ['Authorization' => 'Bearer '.$token];
 
             return response()->json($rider, HttpResponseCode::OK, $header);
@@ -157,6 +160,7 @@ class RiderController extends Controller
         $rider = Auth::guard('rider')->user();
         if(isset($rider)) {
             $rider->removeApiToken();
+            $restaurateur->removeDeviceId();
             $message = ['message' => 'Logout'];
             $code = HttpResponseCode::OK;
         }
@@ -166,5 +170,14 @@ class RiderController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    /**
+     * Test method to send notification
+     */
+    public function testNotification(Request $request, $id) {
+        $customer = Rider::find($id);
+        $result = $customer->sendNotification($request->title, $request->message);
+        return response()->json($result);
     }
 }

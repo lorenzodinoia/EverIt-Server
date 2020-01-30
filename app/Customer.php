@@ -11,8 +11,8 @@ use Illuminate\Support\Str;
 
 class Customer extends Authenticatable
 {
-    protected $guarded = ['password', 'remember_token'];
-    protected $hidden = ['remember_token', 'password'];
+    protected $guarded = ['password', 'remember_token', 'device_id'];
+    protected $hidden = ['remember_token', 'password', 'device_id'];
 
     /**
      * Password field setter
@@ -112,5 +112,47 @@ class Customer extends Authenticatable
         else {
             return null;
         }
+    }
+
+    /**
+     * Set the Android app id in order to send notification
+     */
+    public function setDeviceId($deviceId) {
+        $this->makeVisible('device_id')->device_id = $deviceId;
+        $this->makeHidden('device_id');
+        $this->save();
+    }
+
+    /**
+     * Invalidate the device_id
+     */
+    public function removeDeviceId() {
+        $this->makeVisible('device_id')->device_id = null;
+        $this->makeHidden('device_id');
+        $this->save();
+    }
+
+    /**
+     * Send notification to customer's device
+     */
+    public function sendNotification($title, $message) {
+        $this->makeVisible('device_id');
+
+        if(isset($this->device_id)) {
+            $notification = new Notification($this->device_id, $title, $message);
+            $result = $notification->send()['success'];
+            if($result == 1) {
+                $result = true;
+            }
+            else {
+                $result = false;
+            }
+            $this->makeHidden('device_id');
+        }
+        else {
+            $result = false;
+        }
+
+        return $result;
     }
 }

@@ -29,6 +29,7 @@ class CreateRestaurateursTable extends Migration
             $table->string('image_path')->nullable();
             $table->unsignedBigInteger('shop_type_id');
             $table->unsignedBigInteger('city_id');
+            $table->string('device_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
 

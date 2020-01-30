@@ -192,6 +192,9 @@ class RestaurateurController extends Controller
         $restaurateur = Restaurateur::attemptLogin($request->email, $request->password);
         if(isset($restaurateur)) {
             $token = $restaurateur->setApiToken();
+            if(isset($request->device_id)) {
+                $restaurateur->setDeviceId($request->device_id);
+            }
             $header = ['Authorization' => 'Bearer '.$token];
 
             return response()->json($restaurateur, HttpResponseCode::OK, $header);
@@ -209,6 +212,7 @@ class RestaurateurController extends Controller
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {
             $restaurateur->removeApiToken();
+            $restaurateur->removeDeviceId();
             $message = ['message' => 'Logout'];
             $code = HttpResponseCode::OK;
         }
@@ -218,5 +222,14 @@ class RestaurateurController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    /**
+     * Test method to send notification
+     */
+    public function testNotification(Request $request, $id) {
+        $customer = Restaurateur::find($id);
+        $result = $customer->sendNotification($request->title, $request->message);
+        return response()->json($result);
     }
 }

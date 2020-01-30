@@ -20,6 +20,7 @@ class CreateRidersTable extends Migration
             $table->string('phone_number', 15);
             $table->string('email', 50)->unique();
             $table->string('password');
+            $table->string('device_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
