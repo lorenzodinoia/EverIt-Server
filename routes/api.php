@@ -42,6 +42,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
     Route::put(RESTAURATEUR.'/update', 'RestaurateurController@update');
     Route::delete(RESTAURATEUR.'/delete', 'RestaurateurController@delete');
+    Route::post(RESTAURATEUR.'/addProducts', 'RestaurateurController@addProducts');
 });
 
 Route::post(RIDER, 'RiderController@create');

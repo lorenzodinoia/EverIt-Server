@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Restaurateur;
 use App\City;
 use App\ShopType;
+use App\ProductCategory;
+use App\Product;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
@@ -231,5 +233,49 @@ class RestaurateurController extends Controller
         $customer = Restaurateur::find($id);
         $result = $customer->sendNotification($request->title, $request->message);
         return response()->json($result);
+    }
+
+    public function addProducts(Request $request) {
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)) {
+            $success = true;
+
+            foreach ($request->products as $product) {
+                if(isset($product['product_category']['id'])) {
+                    $category = ProductCategory::find($categoryId);
+                }
+                else if(isset($product['product_category']['name'])) {
+                    $name = $product['product_category']['name'];
+                    $category = ProductCategory::where('name', $name)->first();
+                    if(!isset($category)) {
+                        $category = new ProductCategory;
+                        $category->name = $name;
+                        $category->save();
+                    }
+                }
+                
+                if(isset($category)) {
+                    $newProduct = new Product;
+                    $newProduct->name = $product['name'];
+                    $newProduct->price = $product['price'];
+                    $newProduct->details = $product['details'];
+                    $newProduct->restaurateur()->associate($restaurateur);
+                    $newProduct->productCategory()->associate($category);
+                    $newProduct->save();
+                }
+                else {
+                    $success = false;
+                }
+            }
+
+            $message = ['message' => $success];
+            $code = ($success) ? HttpResponseCode::CREATED : HttpResponseCode::SERVER_ERROR;
+        }
+        else {
+            $message = ['message' => 'User not recognized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 }

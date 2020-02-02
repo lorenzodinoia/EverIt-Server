@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\HttpResponseCode;
 use App\Order;
+use App\Product;
+use App\Restaurateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +29,8 @@ class OrderController extends Controller
                 if(isset($request->delivery_notes)){
                     $order->delivery_notes = $request->delivery_notes;
                 }
-                $order->validation_code = $request->validation_code;
+                //$order->validation_code = $request->validation_code; Dovremmo generarlo
+                $order->validation_code = (string) rand(10000, 99999);
                 if(isset($request->actual_delivery_time)){
                     $order->actual_delivery_time = $request->actual_delivery_time;
                 }
@@ -40,11 +43,37 @@ class OrderController extends Controller
                 }
 
                 $order->save();
+                $savedOrder = Order::find($order->id);
 
-                $message = Order::find($order->id);
-                $code = HttpResponseCode::OK;
+                $productAttached = true;
+                foreach($request->products as $product) {
+                    $id = $product['id'];
+                    $quantity = (isset($product['quantity'])) ? intval($product['quantity']) : 1;
+                    $selectedProduct = Product::find($id);
+                    if(isset($selectedProduct)) {
+                        $order->products()->attach($id, ['quantity' => $quantity]);
+                    }
+                    else {
+                        $productAttached = false;
+                    }
+                }
 
-            } else {
+                if($productAttached) {
+                    $restaurateur = $savedOrder->restaurateur()->get();
+                    if(isset($restaurateur)) {
+                        $restaurateur->sendNotification('Nuovo ordine', 'Hai ricevuto un nuovo ordine');
+                    }
+                    $message = $savedOrder;
+                    $code = HttpResponseCode::OK;
+                }
+                else {
+                    $savedOrder->delete();
+                    $message = ['message' => 'Invalid products id'];
+                    $code = HttpResponseCode::BAD_REQUEST;
+                }
+
+            } 
+            else {
                 $message = $validator->errors();
                 $code = HttpResponseCode::BAD_REQUEST;
             }

@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Validator;
 class Order extends Model
 {
     protected $casts = [
-        'estimated_delivery_time'  => 'datetime',
-        'actual_delivery_time' => 'datetime',
+        'estimated_delivery_time'  => 'datetime:Y-m-d H:i',
+        'actual_delivery_time' => 'datetime:Y-m-d H:i',
     ];
 
     /**
@@ -47,8 +47,10 @@ class Order extends Model
     public static function checkCreateRequest(Request $request) {
         $rules = [
             'delivery_address' => 'required|string',
-            'estimated_delivery_time' => 'required|date_format:Y-m-d H:i:s',
-            'validation_code' => 'required|integer'
+            'estimated_delivery_time' => 'required|date_format:Y-m-d H:i',
+            'products.*.id' => 'required|integer',
+            'products.*.quantity' => 'integer'
+            //'validation_code' => 'required|integer' In teoria dovrebbe generarlo il server
         ];
 
         $message = [
