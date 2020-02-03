@@ -42,6 +42,14 @@ class Order extends Model
     }
 
     /**
+     * Get the restaurateur as field
+     */
+    public function getRestaurateurAttribute()
+    {
+        return $this->restaurateur()->get();
+    }
+
+    /**
      * Check if the request is well formatted
      */
     public static function checkCreateRequest(Request $request) {

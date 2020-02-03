@@ -9,7 +9,6 @@ use App\Restaurateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class OrderController extends Controller
 {
     /**
@@ -106,8 +105,10 @@ class OrderController extends Controller
     public function readCustomerOrders() {
         $customer = Auth::guard("customer")->user();
 
-        if(isset($customer)){
-            return response()->json($customer->orders()->get(), HttpResponseCode::OK);
+        if(isset($customer)) {
+            return response()->json($customer->orders()->get()->each(function ($order) {
+                $order->append('restaurateur');
+            }), HttpResponseCode::OK);
         }
         else{
             return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
@@ -133,14 +134,28 @@ class OrderController extends Controller
      *  Get current logged in restaurateur's order list
      */
     public function readRestaurateurOrders() {
+        $restaurateur = Auth::guard("restaurateur")->user();
 
+        if(isset($restaurateur)) {
+            return response()->json($restaurateur->delivered_orders, HttpResponseCode::OK);
+        }
+        else{
+            return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
+        }
     }
 
      /**
      * Get the list of in progress order for the current logged in restaurateur
      */
     public function readRestaurateurInProgressOrders() {
+        $restaurateur = Auth::guard("restaurateur")->user();
 
+        if(isset($restaurateur)) {
+            return response()->json($restaurateur->pending_orders, HttpResponseCode::OK);
+        }
+        else{
+            return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class Restaurateur extends Authenticatable
 {
@@ -49,6 +50,35 @@ class Restaurateur extends Authenticatable
     public function products()
     {
         return $this->hasMany('App\Product');
+    }
+    
+    /**
+     * Query the databse to retrive the orders
+     */
+    public function orders(bool $delivered) {
+        return DB::table('products')
+                ->join('order_product', 'products.id', '=', 'order_product.product_id')
+                ->join('orders', 'orders.id', '=', 'order_product.order_id')
+                ->where('products.restaurateur_id', $this->id)
+                ->where('orders.delivered', '=', $delivered)
+                ->select('orders.*')
+                ->distinct();
+    }
+
+    /**
+     * Get pending orders as field
+     */
+    public function getPendingOrdersAttribute()
+    {
+        return $this->orders(false)->get();
+    }
+
+    /**
+     * Get delivered orders as field
+     */
+    public function getDeliveredOrdersAttribute()
+    {
+        return $this->orders(true)->get(true);
     }
 
     /**
