@@ -46,7 +46,7 @@ class Order extends Model
      */
     public function getRestaurateurAttribute()
     {
-        return $this->restaurateur()->get();
+        return $this->restaurateur()->get()[0];
     }
 
     /**

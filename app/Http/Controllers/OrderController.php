@@ -106,7 +106,7 @@ class OrderController extends Controller
         $customer = Auth::guard("customer")->user();
 
         if(isset($customer)) {
-            return response()->json($customer->orders()->get()->each(function ($order) {
+            return response()->json($customer->orders()->with('products')->get()->each(function ($order) {
                 $order->append('restaurateur');
             }), HttpResponseCode::OK);
         }

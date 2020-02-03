@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Validator;
 
 class Product extends Model
 {
+    protected $hidden = ['pivot'];
+    protected $appends = ['quantity'];
+
     /**
      * Define the inverse one (restaurateurs) to many (products) relationship
      */
@@ -24,6 +27,17 @@ class Product extends Model
 
     public function order() {
         return $this->belongsToMany('App\Order', 'order_product')->withPivot('quantity');
+    }
+
+    public function getQuantityAttribute() {
+        $this->makeVisible('pivot');
+        $value = 0;
+        if(isset($this->pivot)) {
+            $value = $this->pivot->quantity;
+            $this->makeHidden('pivot');
+        }
+
+        return $value;
     }
 
     /**
