@@ -58,7 +58,7 @@ class OrderController extends Controller
                 }
 
                 if($productAttached) {
-                    $restaurateur = $savedOrder->restaurateur()->get();
+                    $restaurateur = $savedOrder->restaurateur()->get()[0];
                     if(isset($restaurateur)) {
                         $restaurateur->sendNotification('Nuovo ordine', 'Hai ricevuto un nuovo ordine');
                     }

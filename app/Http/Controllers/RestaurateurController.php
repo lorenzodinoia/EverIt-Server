@@ -250,6 +250,7 @@ class RestaurateurController extends Controller
                     if(!isset($category)) {
                         $category = new ProductCategory;
                         $category->name = $name;
+                        $category->restaurateur()->associate($restaurateur);
                         $category->save();
                     }
                 }
@@ -277,5 +278,13 @@ class RestaurateurController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    public function readProductCategories() {
+        $restaurateur = Auth::guard('restaurateur')->user();
+
+        if(isset($restaurateur)) {
+            return response()->json($restaurateur->productCategories()->get(), HttpResponseCode::OK);
+        }
     }
 }

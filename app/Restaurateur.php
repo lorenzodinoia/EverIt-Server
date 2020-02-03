@@ -51,6 +51,10 @@ class Restaurateur extends Authenticatable
     {
         return $this->hasMany('App\Product');
     }
+
+    public function productCategories() {
+        return $this->hasMany('App\ProductCategory');
+    }
     
     /**
      * Query the databse to retrive the orders

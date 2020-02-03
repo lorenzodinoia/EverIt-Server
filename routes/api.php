@@ -43,6 +43,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::put(RESTAURATEUR.'/update', 'RestaurateurController@update');
     Route::delete(RESTAURATEUR.'/delete', 'RestaurateurController@delete');
     Route::post(RESTAURATEUR.'/addProducts', 'RestaurateurController@addProducts');
+    Route::get(RESTAURATEUR.'/current/productCategories', 'RestaurateurController@readProductCategories');
     Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurOrders');
     Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurInProgressOrders');
 });

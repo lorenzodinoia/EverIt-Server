@@ -38,7 +38,7 @@ class Order extends Model
      * Get the reference to the restaurateur through products
      */
     public function restaurateur() {
-        return $this->products()->first()->restaurateur();
+        return $this->products()->first()->restaurateur()->first();
     }
 
     /**

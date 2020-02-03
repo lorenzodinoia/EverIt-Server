@@ -16,6 +16,11 @@ class CreateProductCategoriesTable extends Migration
         Schema::create('product_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->unsignedBigInteger('restaurateur_id');
+
+            $table->foreign('restaurateur_id')->references('id')->on('restaurateurs')->onDelete('cascade');
+
+            $table->unique(['restaurateur_id', 'name']);
         });
     }
 
