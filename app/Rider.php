@@ -8,12 +8,16 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 
 class Rider extends Authenticatable
 {
     protected $guarded = ['password', 'remember_token', 'device_id'];
-    protected $hidden = ['remember_token', 'password', 'device_id'];
+    protected $hidden = ['remember_token', 'password', 'device_id', 'last_latitude', 'location_update'];
+    protected $casts = [
+        'location_update'  => 'datetime:Y-m-d H:i',
+    ];
 
     /**
      * Password field setter
@@ -120,5 +124,15 @@ class Rider extends Authenticatable
         }
 
         return $result;
+    }
+
+    /**
+     * Set the current rider's position within the current time
+     */
+    public function setLocation($latitude, $longitude) {
+        $this->last_latitude = $latitude;
+        $this->last_longitude = $longitude;
+        $this->location_update = Carbon::now();
+        $this->save();
     }
 }

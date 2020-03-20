@@ -57,6 +57,7 @@ Route::middleware(['auth:rider'])->group(function () {
     Route::get(RIDER, 'RiderController@readCurrent');
     Route::put(RIDER.'/update', 'RiderController@update');
     Route::delete(RIDER.'/delete', 'RiderController@delete');
+    Route::post(RIDER.'/location', 'RiderController@setCurrentLocation');
 });
 
 Route::get(CITY.'/{id}', 'CityController@read');

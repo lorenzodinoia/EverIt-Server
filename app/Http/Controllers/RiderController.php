@@ -180,4 +180,25 @@ class RiderController extends Controller
         $result = $customer->sendNotification($request->title, $request->message);
         return response()->json($result);
     }
+
+    public function setCurrentLocation(Request $request) {
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)) {
+            if(isset($request->latitude) && isset($request->longitude)) {
+                $rider->setLocation($request->latitude, $request->longitude);
+                $message = ['message' => 'OK'];
+                $code = HttpResponseCode::OK;
+            }
+            else {
+                $message = ['message' => 'Coordinates not provided'];
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else {
+            $message = ['message' => 'User not recognized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }
