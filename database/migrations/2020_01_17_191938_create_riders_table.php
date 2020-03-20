@@ -21,6 +21,9 @@ class CreateRidersTable extends Migration
             $table->string('email', 50)->unique();
             $table->string('password');
             $table->string('device_id')->nullable();
+            $table->double('last_latitude')->nullable();
+            $table->double('last_longitude')->nullable();
+            $table->dateTime('location_update')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

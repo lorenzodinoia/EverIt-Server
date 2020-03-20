@@ -20,12 +20,10 @@ class CreateProductsTable extends Migration
             $table->text('details')->nullable();
             $table->unsignedBigInteger('product_category_id');
             $table->unsignedBigInteger('restaurateur_id');
-            $table->timestamps();
 
             $table->foreign('product_category_id')->references('id')->on('product_categories')->onDelete('cascade');
-            $table->foreign('restaurateur_id')->references('id')->on('restaurateurs')->onDelete('cascade');
 
-            $table->unique(['restaurateur_id', 'name']);
+            $table->unique(['product_category_id', 'name']); 
         });
     }
 

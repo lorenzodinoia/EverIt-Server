@@ -17,6 +17,8 @@ class CreateRestaurateursTable extends Migration
             $table->bigIncrements('id');
             $table->string('shop_name');
             $table->string('address');
+            $table->double('longitude');
+            $table->double('latitude');
             $table->string('cap', 5);
             $table->string('phone_number', 15);
             $table->string('email')->unique();
@@ -35,6 +37,8 @@ class CreateRestaurateursTable extends Migration
 
             $table->foreign('shop_type_id')->references('id')->on('shop_types')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            
+            $table->unique(['shop_name', 'city_id']);
         });
     }
 
