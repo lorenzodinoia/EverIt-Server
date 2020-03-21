@@ -35,10 +35,10 @@ class Order extends Model
     }
 
     /**
-     * Get the reference to the restaurateur through products
+     * 
      */
     public function restaurateur() {
-        return $this->products()->first()->restaurateur()->first();
+        return $this->belongsTo('App\Restaurateur');
     }
 
     /**

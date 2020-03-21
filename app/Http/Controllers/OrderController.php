@@ -14,9 +14,10 @@ class OrderController extends Controller
     /**
      * Create new order
      */
-    public function create(Request $request) {
+    public function create(Request $request, $restaurateurId) {
         $customer = Auth::guard('customer')->user();
-        if(isset($customer)) {
+        $restaurateur = Restaurateur::find($restaurateurId);
+        if(isset($customer) && isset($restaurateur)) {
             $validator = Order::checkCreateRequest($request);
             if (!$validator->fails()) {
                 $order = new Order();
@@ -28,7 +29,6 @@ class OrderController extends Controller
                 if(isset($request->delivery_notes)){
                     $order->delivery_notes = $request->delivery_notes;
                 }
-                //$order->validation_code = $request->validation_code; Dovremmo generarlo
                 $order->validation_code = (string) rand(10000, 99999);
                 if(isset($request->actual_delivery_time)){
                     $order->actual_delivery_time = $request->actual_delivery_time;
@@ -39,7 +39,8 @@ class OrderController extends Controller
                 $order->customer()->associate($customer->id);
                 if(isset($request->rider_id)){
                     $order->rider()->associate($request->rider_id);
-                }
+                }                
+                $order->restaurateur()->associate($restaurateur);
 
                 $order->save();
                 $savedOrder = Order::find($order->id);
@@ -58,10 +59,7 @@ class OrderController extends Controller
                 }
 
                 if($productAttached) {
-                    $restaurateur = $savedOrder->restaurateur()->get()[0];
-                    if(isset($restaurateur)) {
-                        $restaurateur->sendNotification('Nuovo ordine', 'Hai ricevuto un nuovo ordine');
-                    }
+                    $restaurateur->sendNotification('Nuovo ordine', 'Hai ricevuto un nuovo ordine');
                     $message = $savedOrder;
                     $code = HttpResponseCode::OK;
                 }
@@ -77,7 +75,7 @@ class OrderController extends Controller
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
-        else{
+        else {
             $message = "Unauthorized";
             $code = HttpResponseCode::UNAUTHORIZED;
         }
@@ -144,17 +142,28 @@ class OrderController extends Controller
         }
     }
 
-     /**
-     * Get the list of in progress order for the current logged in restaurateur
-     */
-    public function readRestaurateurInProgressOrders() {
+    public function readRestaurateurDeliveredOrders() {
         $restaurateur = Auth::guard("restaurateur")->user();
 
         if(isset($restaurateur)) {
-            return response()->json($restaurateur->pending_orders, HttpResponseCode::OK);
+            return response()->json($restaurateur->deliveredOrders()->get(), HttpResponseCode::OK);
         }
-        else{
-            return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
+        else {
+            return response()->json(["message" => "Unauthorized"], HttpResponseCode::UNAUTHORIZED);
+        }
+    }
+
+     /**
+     * Get the list of in progress order for the current logged in restaurateur
+     */
+    public function readRestaurateurPendingOrders() {
+        $restaurateur = Auth::guard("restaurateur")->user();
+
+        if(isset($restaurateur)) {
+            return response()->json($restaurateur->pendingOrders()->get(), HttpResponseCode::OK);
+        }
+        else {
+            return response()->json(["message" => "Unauthorized"], HttpResponseCode::UNAUTHORIZED);
         }
     }
 

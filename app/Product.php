@@ -10,12 +10,13 @@ class Product extends Model
 {
     protected $hidden = ['pivot'];
     protected $appends = ['quantity'];
+    public $timestamps = false;
 
     /**
      * Define the inverse one (restaurateurs) to many (products) relationship
      */
     public function restaurateur() {
-        return $this->belongsTo('App\Restaurateur');
+        //TODO Boh
     }
 
     /**

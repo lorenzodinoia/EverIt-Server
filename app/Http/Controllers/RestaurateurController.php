@@ -23,6 +23,8 @@ class RestaurateurController extends Controller
 
             $cretedRestaurateur->shop_name = $request->shop_name;
             $cretedRestaurateur->address = $request->address;
+            $cretedRestaurateur->latitude = $request->latitude;
+            $cretedRestaurateur->longitude = $request->longitude;
             $cretedRestaurateur->cap = $request->cap;
             $cretedRestaurateur->phone_number = $request->phone_number;
             $cretedRestaurateur->email = $request->email;
@@ -235,6 +237,7 @@ class RestaurateurController extends Controller
         return response()->json($result);
     }
 
+    //TODO Da moficare in base al nuovo schema
     public function addProducts(Request $request) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {

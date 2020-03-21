@@ -20,6 +20,7 @@ const ORDER = '/order';
 const CITY = '/city';
 const PRODUCT_CATEGORY = '/productCategory';
 const SHOP_TYPE = '/shopType';
+const PRODUCT = "/product";
 
 Route::post(CUSTOMER, 'CustomerController@create');
 Route::post(CUSTOMER.'/login', 'CustomerController@login');
@@ -31,12 +32,15 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::delete(CUSTOMER.'/delete', 'CustomerController@delete');
     Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
     Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@read');
-    Route::post(CUSTOMER.ORDER, 'OrderController@create');});
+});
 
 Route::post(RESTAURATEUR, 'RestaurateurController@create');
 Route::post(RESTAURATEUR.'/login', 'RestaurateurController@login');
 Route::get(RESTAURATEUR.'/{id}','RestaurateurController@read');
 Route::post(RESTAURATEUR.'/{id}/testNotification', 'RestaurateurController@testNotification');
+Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY, 'ProductCategoryController@readAll');
+Route::get(RESTAURATEUR.'/{id}'.PRODUCT, 'ProductController@readAllByRestaurateur');
+Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
 Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
@@ -44,8 +48,13 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::delete(RESTAURATEUR.'/delete', 'RestaurateurController@delete');
     Route::post(RESTAURATEUR.'/addProducts', 'RestaurateurController@addProducts');
     Route::get(RESTAURATEUR.'/current/productCategories', 'RestaurateurController@readProductCategories');
-    Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurOrders');
-    Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurInProgressOrders');
+    
+    Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurDeliveredOrders');
+    Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurPendingOrders');
+
+    Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
+    
+    Route::post(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}'.PRODUCT, 'ProductController@create');
 });
 
 Route::post(RIDER, 'RiderController@create');
@@ -57,6 +66,7 @@ Route::middleware(['auth:rider'])->group(function () {
     Route::get(RIDER, 'RiderController@readCurrent');
     Route::put(RIDER.'/update', 'RiderController@update');
     Route::delete(RIDER.'/delete', 'RiderController@delete');
+
     Route::post(RIDER.'/location', 'RiderController@setCurrentLocation');
 });
 

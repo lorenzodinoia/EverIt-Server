@@ -49,42 +49,25 @@ class Restaurateur extends Authenticatable
      */
     public function products()
     {
-        return $this->hasMany('App\Product');
+        return $this->hasManyThrough('App\Product', 'App\ProductCategory');
     }
 
     public function productCategories() {
         return $this->hasMany('App\ProductCategory');
     }
+
+    public function orders() {
+        return $this->hasMany('App\Order');
+    }
+
+    public function pendingOrders() {
+        return $this->orders()->where('delivered', false);
+    }
+
+    public function deliveredOrders() {
+        return $this->orders()->where('delivered', true);
+    }
     
-    /**
-     * Query the databse to retrive the orders
-     */
-    public function orders(bool $delivered) {
-        return DB::table('products')
-                ->join('order_product', 'products.id', '=', 'order_product.product_id')
-                ->join('orders', 'orders.id', '=', 'order_product.order_id')
-                ->where('products.restaurateur_id', $this->id)
-                ->where('orders.delivered', '=', $delivered)
-                ->select('orders.*')
-                ->distinct();
-    }
-
-    /**
-     * Get pending orders as field
-     */
-    public function getPendingOrdersAttribute()
-    {
-        return $this->orders(false)->get();
-    }
-
-    /**
-     * Get delivered orders as field
-     */
-    public function getDeliveredOrdersAttribute()
-    {
-        return $this->orders(true)->get(true);
-    }
-
     /**
      * Check if the request is well formatted
      */
@@ -92,6 +75,8 @@ class Restaurateur extends Authenticatable
         $rules = [
             'shop_name' => 'required|string',
             'address' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'cap' => 'required|string|between:1,5',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
