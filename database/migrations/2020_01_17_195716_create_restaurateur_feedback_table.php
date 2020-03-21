@@ -17,6 +17,7 @@ class CreateRestaurateurFeedbackTable extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('restaurateur_id');
             $table->integer('vote')->default(1)->unsigned();
+            $table->string('text')->nullable();
 
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->foreign('restaurateur_id')->references('id')->on('restaurateurs')->onDelete('cascade');
