@@ -24,10 +24,12 @@ class CreateOrdersTable extends Migration
             $table->boolean('delivered')->default(0);
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('rider_id')->nullable();
+            $table->unsignedBigInteger('restaurateur_id');
             $table->timestamps();
 
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->foreign('rider_id')->references('id')->on('riders')->onDelete('cascade');
+            $table->foreign('restaurateur_id')->references('id')->on('restaurateurs')->onDelete('cascade');
         });
     }
 
