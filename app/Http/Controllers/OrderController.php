@@ -39,7 +39,7 @@ class OrderController extends Controller
                 $order->customer()->associate($customer->id);
                 if(isset($request->rider_id)){
                     $order->rider()->associate($request->rider_id);
-                }                
+                }
                 $order->restaurateur()->associate($restaurateur);
 
                 $order->save();
@@ -69,7 +69,7 @@ class OrderController extends Controller
                     $code = HttpResponseCode::BAD_REQUEST;
                 }
 
-            } 
+            }
             else {
                 $message = $validator->errors();
                 $code = HttpResponseCode::BAD_REQUEST;
@@ -111,13 +111,6 @@ class OrderController extends Controller
         else{
             return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
         }
-    }
-
-    /**
-     * Get the list of in progress order for the current logged in customer
-     */
-    public function readCustomerInProgressOrders() {
-
     }
 
     /**
