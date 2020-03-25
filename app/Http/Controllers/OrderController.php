@@ -36,6 +36,9 @@ class OrderController extends Controller
                 if(isset($request->delivered)){
                     $order->delivered = $request->delivered;
                 }
+                if(isset($request->late)){
+                    $order->late = $request->late;
+                }
                 $order->customer()->associate($customer->id);
                 if(isset($request->rider_id)){
                     $order->rider()->associate($request->rider_id);

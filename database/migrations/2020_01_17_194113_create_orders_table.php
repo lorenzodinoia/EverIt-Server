@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->string('validation_code', 5);
             $table->dateTime('actual_delivery_time')->nullable();
             $table->boolean('delivered')->default(0);
+            $table->boolean('late')->default(0);
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('rider_id')->nullable();
             $table->unsignedBigInteger('restaurateur_id');
