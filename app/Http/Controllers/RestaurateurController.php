@@ -25,11 +25,10 @@ class RestaurateurController extends Controller
             $cretedRestaurateur->address = $request->address;
             $cretedRestaurateur->latitude = $request->latitude;
             $cretedRestaurateur->longitude = $request->longitude;
-            $cretedRestaurateur->cap = $request->cap;
             $cretedRestaurateur->phone_number = $request->phone_number;
             $cretedRestaurateur->email = $request->email;
             $cretedRestaurateur->password = $request->password;
-            $cretedRestaurateur->piva = $request->piva;
+            $cretedRestaurateur->vat_number = $request->vat_number;
             if(isset($request->description)) {
                 $cretedRestaurateur->description = $request->description;
             }
@@ -114,13 +113,12 @@ class RestaurateurController extends Controller
             if(!$validator->fails()){
                 $restaurateur->shop_name = $newData->shop_name;
                 $restaurateur->address = $newData->address;
-                $restaurateur->cap = $newData->cap;
                 $restaurateur->phone_number = $newData->phone_number;
                 $restaurateur->email = $newData->email;
                 if(isset($newData->password)) {
                     $restaurateur->password = $newData->password;
                 }
-                $restaurateur->piva = $newData->piva;
+                $restaurateur->vat_number = $newData->vat_number;
                 if(isset($newData->description)){
                     $restaurateur->description = $newData->description;
                 }
@@ -257,7 +255,7 @@ class RestaurateurController extends Controller
                         $category->save();
                     }
                 }
-                
+
                 if(isset($category)) {
                     $newProduct = new Product;
                     $newProduct->name = $product['name'];

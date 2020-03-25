@@ -67,7 +67,7 @@ class Restaurateur extends Authenticatable
     public function deliveredOrders() {
         return $this->orders()->where('delivered', true);
     }
-    
+
     /**
      * Check if the request is well formatted
      */
@@ -77,11 +77,10 @@ class Restaurateur extends Authenticatable
             'address' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'cap' => 'required|string|between:1,5',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
             'password' => 'required|string',
-            'piva' => 'required|string|between:1,11',
+            'vat_number' => 'required|string|between:1,11',
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
             'min_quantity' => 'numeric',
@@ -106,11 +105,10 @@ class Restaurateur extends Authenticatable
         $rules = [
             'shop_name' => 'required|string',
             'address' => 'required|string',
-            'cap' => 'required|string|between:1,5',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
             'password' => 'string',
-            'piva' => 'required|string|between:1,11',
+            'vat_number' => 'required|string|between:1,11',
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
             'min_quantity' => 'numeric',

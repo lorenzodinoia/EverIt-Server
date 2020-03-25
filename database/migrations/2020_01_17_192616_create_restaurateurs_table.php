@@ -19,11 +19,10 @@ class CreateRestaurateursTable extends Migration
             $table->string('address');
             $table->double('longitude');
             $table->double('latitude');
-            $table->string('cap', 5);
             $table->string('phone_number', 15);
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('piva', 11);
+            $table->string('vat_number', 11);
             $table->text('description')->nullable();
             $table->float('delivery_cost', 4, 2)->default(0);
             $table->integer('min_quantity')->default(1)->unsigned();
@@ -37,7 +36,7 @@ class CreateRestaurateursTable extends Migration
 
             $table->foreign('shop_type_id')->references('id')->on('shop_types')->onDelete('cascade');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
-            
+
             $table->unique(['shop_name', 'city_id']);
         });
     }
