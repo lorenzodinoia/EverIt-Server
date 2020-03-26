@@ -68,6 +68,10 @@ class Restaurateur extends Authenticatable
         return $this->orders()->where('delivered', true);
     }
 
+    public function openingTimes(){
+        return $this->hasMany('App\OpeningTime');
+    }
+
     /**
      * Check if the request is well formatted
      */
