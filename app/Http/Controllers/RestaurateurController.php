@@ -35,14 +35,8 @@ class RestaurateurController extends Controller
             if(isset($request->delivery_cost)) {
                 $cretedRestaurateur->delivery_cost = $request->delivery_cost;
             }
-            if(isset($request->min_quantity)) {
-                $cretedRestaurateur->min_quantity = $request->min_quantity;
-            }
-            if(isset($request->min_quantity)) {
-                $cretedRestaurateur->min_quantity = $request->min_quantity;
-            }
-            if(isset($request->order_range_time)) {
-                $cretedRestaurateur->order_range_time = $request->order_range_time;
+            if(isset($request->min_price)) {
+                $cretedRestaurateur->min_price = $request->min_price;
             }
             $city = City::find($request->city_id);
             if(isset($city)) {
@@ -123,11 +117,8 @@ class RestaurateurController extends Controller
                     $restaurateur->description = $newData->description;
                 }
                 $restaurateur->delivery_cost = $newData->delivery_cost;
-                if(isset($newData->min_quantity)) {
-                    $restaurateur->min_quantity = $newData->min_quantity;
-                }
-                if(isset($newData->order_range_time)) {
-                    $restaurateur->order_range_time = $newData->order_range_time;
+                if(isset($newData->min_price)) {
+                    $restaurateur->min_price = $newData->min_price;
                 }
                 $city = City::find($newData->city_id);
                 if(isset($city)) {

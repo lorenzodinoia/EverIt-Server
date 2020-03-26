@@ -83,8 +83,7 @@ class Restaurateur extends Authenticatable
             'vat_number' => 'required|string|between:1,11',
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
-            'min_quantity' => 'numeric',
-            'order_range_time' => 'numeric',
+            'min_price' => 'numeric',
             'shop_type_id' => 'required|integer',
             'city_id' => 'required|integer'
         ];
@@ -111,8 +110,7 @@ class Restaurateur extends Authenticatable
             'vat_number' => 'required|string|between:1,11',
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
-            'min_quantity' => 'numeric',
-            'order_range_time' => 'numeric',
+            'min_price' => 'numeric',
             'shop_type_id' => 'required|integer',
             'city_id' => 'required|integer'
         ];

@@ -25,8 +25,7 @@ class CreateRestaurateursTable extends Migration
             $table->string('vat_number', 11);
             $table->text('description')->nullable();
             $table->float('delivery_cost', 4, 2)->default(0);
-            $table->integer('min_quantity')->default(1)->unsigned();
-            $table->integer('order_range_time')->default(10)->unsigned();
+            $table->integer('min_price')->default(1)->unsigned();
             $table->string('image_path')->nullable();
             $table->unsignedBigInteger('shop_type_id');
             $table->unsignedBigInteger('city_id');
