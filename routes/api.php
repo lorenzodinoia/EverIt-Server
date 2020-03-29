@@ -41,6 +41,7 @@ Route::post(RESTAURATEUR.'/{id}/testNotification', 'RestaurateurController@testN
 Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY, 'ProductCategoryController@readAll');
 Route::get(RESTAURATEUR.'/{id}'.PRODUCT, 'ProductController@readAllByRestaurateur');
 Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
+Route::get(RESTAURATEUR.'/search/nearby', 'RestaurateurController@searchNearby');
 Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');

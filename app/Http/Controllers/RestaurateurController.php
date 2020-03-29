@@ -10,6 +10,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RestaurateurController extends Controller
 {
@@ -278,5 +279,23 @@ class RestaurateurController extends Controller
         if(isset($restaurateur)) {
             return response()->json($restaurateur->productCategories()->get(), HttpResponseCode::OK);
         }
+    }
+
+    public function searchNearby(Request $request) {
+        $radius = 3; //Radius in km
+        if(isset($request->latitude) && isset($request->longitude)) {
+            $message = Db::table('restaurateurs')
+                    ->selectRaw('*, DISTANCE(?, ?, latitude, longitude) AS km', [$request->latitude, $request->longitude])
+                    ->havingRaw('km <= ?', [$radius])
+                    ->get();
+            $code = HttpResponseCode::OK;
+            //TODO Rimuovere campi extra (password, device_id, remember_token)
+        }
+        else {
+            $message = "Coordinates not provided";
+            $code = HttpResponseCode::BAD_REQUEST;
+        }
+        
+        return response()->json($message, $code);
     }
 }
