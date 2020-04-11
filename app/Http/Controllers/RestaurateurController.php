@@ -284,18 +284,14 @@ class RestaurateurController extends Controller
     public function searchNearby(Request $request) {
         $radius = 3; //Radius in km
         if(isset($request->latitude) && isset($request->longitude)) {
-            $message = Db::table('restaurateurs')
-                    ->selectRaw('*, DISTANCE(?, ?, latitude, longitude) AS km', [$request->latitude, $request->longitude])
-                    ->havingRaw('km <= ?', [$radius])
-                    ->get();
+            $message = Restaurateur::havingRaw("DISTANCE(?, ?, latitude, longitude) <= ?", [$request->latitude, $request->longitude, $radius])->get();
             $code = HttpResponseCode::OK;
-            //TODO Rimuovere campi extra (password, device_id, remember_token)
         }
         else {
-            $message = "Coordinates not provided";
+            $message = ['message' => "Coordinates not provided"];
             $code = HttpResponseCode::BAD_REQUEST;
         }
-        
+
         return response()->json($message, $code);
     }
 }
