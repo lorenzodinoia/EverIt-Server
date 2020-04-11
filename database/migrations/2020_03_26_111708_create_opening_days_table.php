@@ -15,7 +15,7 @@ class CreateOpeningDaysTable extends Migration
     {
         Schema::create('opening_days', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
         });
     }
 

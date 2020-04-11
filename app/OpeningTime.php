@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class OpeningTime extends Model
 {
+    public $timestamps = false;
+
     protected $casts = [
         'opening_time' => 'datetime: H:i',
         'closing_time' => 'datetime H:i',
