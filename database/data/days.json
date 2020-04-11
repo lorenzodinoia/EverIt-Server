@@ -1,0 +1,25 @@
+{
+    "days": [
+        {
+            "name": "Lunedì"
+        },
+        {
+            "name": "Martedì"
+        },
+        {
+            "name": "Mercoledì"
+        },
+        {
+            "name": "Giovedì"
+        },
+        {
+            "name": "Venerdì"
+        },
+        {
+            "name": "Sabato"
+        },
+        {
+            "name": "Domenica"
+        }
+    ]
+}
