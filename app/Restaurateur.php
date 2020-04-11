@@ -13,6 +13,7 @@ class Restaurateur extends Authenticatable
 {
     protected $guarded = ['password', 'remember_token', 'image_path', 'device_id'];
     protected $hidden = ['remember_token', 'password', 'device_id'];
+    protected $with = ['city', 'shopType', 'openingTimes'];
 
     /**
      * Password field setter
@@ -206,5 +207,9 @@ class Restaurateur extends Authenticatable
         }
 
         return $result;
+    }
+
+    public static function fromRawData($raw) {
+
     }
 }
