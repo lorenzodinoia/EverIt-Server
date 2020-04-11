@@ -17,7 +17,7 @@ class OpeningDaysSeeder extends Seeder
         $dayList = json_decode($days);
         foreach($dayList->days as $city) {
             $newDay = OpeningDay::create([
-                'name' => $city->name . ' '
+                'name' => $city->name
             ]);
             $newDay->save();
         }
