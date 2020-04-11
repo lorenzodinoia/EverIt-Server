@@ -208,8 +208,4 @@ class Restaurateur extends Authenticatable
 
         return $result;
     }
-
-    public static function fromRawData($raw) {
-
-    }
 }
