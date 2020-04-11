@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDayOpeningTable extends Migration
+class CreateOpeningDaysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateDayOpeningTable extends Migration
      */
     public function up()
     {
-        Schema::create('day_opening', function (Blueprint $table) {
+        Schema::create('opening_days', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->timestamps();
         });
     }
 
@@ -27,6 +26,6 @@ class CreateDayOpeningTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('day_opening');
+        Schema::dropIfExists('opening_days');
     }
 }
