@@ -49,7 +49,7 @@ class ProductController extends Controller
         $category = ProductCategory::find($categoryId);
         if(isset($category)) {
             $products = $category->products()->get();
-            $message = $product;
+            $message = $products;
             $code = HttpResponseCode::OK;
         }
         else {
@@ -91,6 +91,6 @@ class ProductController extends Controller
      * The restaurateur must be logged in
      */
     public function delete($id) {
-        
+
     }
 }
