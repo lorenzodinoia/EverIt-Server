@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class Order extends Model
 {
+    protected $with = ['products'];
     protected $casts = [
         'estimated_delivery_time'  => 'datetime:Y-m-d H:i',
         'actual_delivery_time' => 'datetime:Y-m-d H:i',
@@ -35,7 +36,7 @@ class Order extends Model
     }
 
     /**
-     * 
+     *
      */
     public function restaurateur() {
         return $this->belongsTo('App\Restaurateur');
@@ -55,16 +56,15 @@ class Order extends Model
     public static function checkCreateRequest(Request $request) {
         $rules = [
             'delivery_address' => 'required|string',
-            'estimated_delivery_time' => 'required|date_format:Y-m-d H:i',
+            'estimated_delivery_time' => 'required|date_format:H:i',
             'products.*.id' => 'required|integer',
             'products.*.quantity' => 'integer'
-            //'validation_code' => 'required|integer' In teoria dovrebbe generarlo il server
         ];
 
         $message = [
             'required' => ':attribute required',
             'string' => ':attribute must be string',
-            'date_format' => ':attribute must respect date format (Y-m-d H:m:s)',
+            'date_format' => ':attribute must respect time format (H:i)',
             'integer' => ':attribute must be integer'
         ];
 

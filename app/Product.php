@@ -10,6 +10,7 @@ class Product extends Model
 {
     protected $hidden = ['pivot'];
     protected $appends = ['quantity'];
+    protected $with = ['productCategory'];
     public $timestamps = false;
 
     /**
@@ -52,6 +53,6 @@ class Product extends Model
             'restaurateur_id' => 'required|integer'
         ];
 
-        return (!Validator::make($request->all(), $rules)->fails());  
+        return (!Validator::make($request->all(), $rules)->fails());
     }
 }

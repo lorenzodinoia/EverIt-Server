@@ -2,79 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\HttpResponseCode;
 use App\Order;
 use App\Product;
 use App\Restaurateur;
 use DateInterval;
 use DateTime;
+use http\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    private const CUSTOMER_ORDER_RELATIONSHIP = ['restaurateur'];
+    private const RESTAURATEUR_ORDER_RELATIONSHIP = ['products', 'customer', 'rider'];
     /**
      * Create new order
      */
     public function create(Request $request, $restaurateurId) {
         $customer = Auth::guard('customer')->user();
         $restaurateur = Restaurateur::find($restaurateurId);
+
         if(isset($customer) && isset($restaurateur)) {
             $validator = Order::checkCreateRequest($request);
             if (!$validator->fails()) {
-                $order = new Order();
-                $order->delivery_address = $request->delivery_address;
-                $order->estimated_delivery_time = $request->estimated_delivery_time;
-                if(isset($request->order_notes)){
-                    $order->order_notes = $request->order_notes;
-                }
-                if(isset($request->delivery_notes)){
-                    $order->delivery_notes = $request->delivery_notes;
-                }
-                $order->validation_code = (string) rand(10000, 99999);
-                if(isset($request->actual_delivery_time)){
-                    $order->actual_delivery_time = $request->actual_delivery_time;
-                }
-                if(isset($request->delivered)){
-                    $order->delivered = $request->delivered;
-                }
-                if(isset($request->late)){
-                    $order->late = $request->late;
-                }
-                $order->customer()->associate($customer->id);
-                if(isset($request->rider_id)){
-                    $order->rider()->associate($request->rider_id);
-                }
-                $order->restaurateur()->associate($restaurateur);
+                DB::beginTransaction();
 
-                $order->save();
-                $savedOrder = Order::find($order->id);
-
-                $productAttached = true;
-                foreach($request->products as $product) {
-                    $id = $product['id'];
-                    $quantity = (isset($product['quantity'])) ? intval($product['quantity']) : 1;
-                    $selectedProduct = Product::find($id);
-                    if(isset($selectedProduct)) {
-                        $order->products()->attach($id, ['quantity' => $quantity]);
+                try {
+                    $order = new Order();
+                    $order->delivery_address = $request->delivery_address;
+                    $now = new DateTime();
+                    $nowHour = (int) $now->format('H');
+                    $deliveryDateTime = new DateTime($request->estimated_delivery_time);
+                    $deliveryHour = (int) $deliveryDateTime->format('H');
+                    if($deliveryHour < $nowHour) {
+                        //It means that the order will be delivered during the night of the next day
+                        $deliveryDateTime->add(new DateInterval('P1D'));
                     }
-                    else {
-                        $productAttached = false;
+                    $order->estimated_delivery_time = $deliveryDateTime->format('Y-m-d H:i');
+                    if(isset($request->order_notes)) {
+                        $order->order_notes = $request->order_notes;
+                    }
+                    if(isset($request->delivery_notes)) {
+                        $order->delivery_notes = $request->delivery_notes;
+                    }
+                    $order->validation_code = (string)rand(10000, 99999);//Generates 5 digits number as validation code
+                    $order->customer()->associate($customer->id);
+                    $order->restaurateur()->associate($restaurateur);
+                    $order->save();
+
+                    $productsCount = 0;
+                    foreach($request->products as $product) {
+                        $id = $product['id'];
+                        $quantity = (isset($product['quantity'])) ? intval($product['quantity']) : 1;
+                        $selectedProduct = Product::find($id);
+                        if(isset($selectedProduct)) {
+                            $order->products()->attach($id, ['quantity' => $quantity]);
+                            $productsCount += $quantity;
+                        }
+                        else {
+                            throw new \Exception("Product not found");
+                        }
                     }
                 }
-
-                if($productAttached) {
-                    $restaurateur->sendNotification('Nuovo ordine', 'Hai ricevuto un nuovo ordine');
-                    $message = $savedOrder;
-                    $code = HttpResponseCode::OK;
-                }
-                else {
-                    $savedOrder->delete();
-                    $message = ['message' => 'Invalid products id'];
-                    $code = HttpResponseCode::BAD_REQUEST;
+                catch (\Exception $e) {
+                    DB::rollback();
+                    return response()->json(['message' => $e->getMessage()], HttpResponseCode::BAD_REQUEST);
                 }
 
+                DB::commit();
+                $notificationFormat = "Hai ricevuto un nuovo ordine di %d prodotti da consegnare alle ore %s";
+                $notificationMessage = sprintf($notificationFormat, $productsCount, $deliveryDateTime->format('H:i'));
+                $restaurateur->sendNotification('Nuovo ordine', $notificationMessage);
+
+                $message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];
+                $code = HttpResponseCode::OK;
             }
             else {
                 $message = $validator->errors();
@@ -82,7 +87,7 @@ class OrderController extends Controller
             }
         }
         else {
-            $message = "Unauthorized";
+            $message = ['message' => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -90,17 +95,36 @@ class OrderController extends Controller
     }
 
     /**
-     * Get details for a given order
+     * Mark an order as delivered by ID and validation code
+     * The rider must be logged in
      */
-    public function read($id) {
+    public function close(Request $request, $orderId) {
+
+    }
+
+    /**
+     * Get details for a given order from customer side
+     */
+    public function readAsCustomer($orderId) {
         $customer = Auth::guard("customer")->user();
-        $order = Order::find($id);
-        if($customer->id == $order->customer_id){
-            return response()->json($order, HttpResponseCode::OK);
+
+        if(isset($customer)) {
+            $order = $customer->orders()->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->where('id', $orderId)->get();
+            if(isset($order[0])) {
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+            }
+            else {
+                $message = ['message' => 'Order not found'];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
         }
-        else{
-            return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
+
+        return response()->json($message, $code);
     }
 
     /**
@@ -110,60 +134,78 @@ class OrderController extends Controller
         $customer = Auth::guard("customer")->user();
 
         if(isset($customer)) {
-            return response()->json($customer->orders()->with('products')->get()->each(function ($order) {
-                $order->append('restaurateur');
-            }), HttpResponseCode::OK);
+            $message = $customer->orders()->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->orderBy('estimated_delivery_time', 'desc')->get();
+            $code = HttpResponseCode::OK;
         }
-        else{
-            return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
+
+        return response()->json($message, $code);
     }
 
     /**
-     * Mark an order as delivered by ID and validation code
-     * The rider must be logged in
+     * Get details for a given order from restaurateur side
      */
-    public function close($id, $validationCode) {
-
-    }
-
-    /**
-     *  Get current logged in restaurateur's order list
-     */
-    public function readRestaurateurOrders() {
+    public function readAsRestaurateur($orderId) {
         $restaurateur = Auth::guard("restaurateur")->user();
 
         if(isset($restaurateur)) {
-            return response()->json($restaurateur->delivered_orders, HttpResponseCode::OK);
+            $order = $restaurateur->orders()->with(OrderController::RESTAURATEUR_ORDER_RELATIONSHIP)->where('id', $orderId)->get();
+            if(isset($order[0])) {
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+            }
+            else {
+                $message = ['message' => 'Order not found'];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
         }
-        else{
-            return response()->json("Unauthorized", HttpResponseCode::UNAUTHORIZED);
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
+
+        return response()->json($message, $code);
     }
 
+    /**
+     *  Get the list of delivered orders for the current logged in restaurateur
+     * The restaurateur must be logged in
+     */
     public function readRestaurateurDeliveredOrders() {
         $restaurateur = Auth::guard("restaurateur")->user();
 
         if(isset($restaurateur)) {
-            return response()->json($restaurateur->deliveredOrders()->get(), HttpResponseCode::OK);
+            $message = $restaurateur->deliveredOrders()->with(OrderController::RESTAURATEUR_ORDER_RELATIONSHIP)->orderBy('actual_delivery_time', 'desc')->get();
+            $code = HttpResponseCode::OK;
         }
-        else {
-            return response()->json(["message" => "Unauthorized"], HttpResponseCode::UNAUTHORIZED);
+        else{
+            $message = ['message' => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
+
+        return response()->json($message, $code);
     }
 
      /**
-     * Get the list of in progress order for the current logged in restaurateur
+     * Get the list of in progress orders for the current logged in restaurateur
+      * The restaurateur must be logged in
      */
     public function readRestaurateurPendingOrders() {
         $restaurateur = Auth::guard("restaurateur")->user();
 
         if(isset($restaurateur)) {
-            return response()->json($restaurateur->pendingOrders()->get(), HttpResponseCode::OK);
+            $message = $restaurateur->pendingOrders()->with(OrderController::RESTAURATEUR_ORDER_RELATIONSHIP)->orderBy('estimated_delivery_time', 'asc')->get();
+            $code = HttpResponseCode::OK;
         }
-        else {
-            return response()->json(["message" => "Unauthorized"], HttpResponseCode::UNAUTHORIZED);
+        else{
+            $message = ['message' => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
+
+        return response()->json($message, $code);
     }
 
     /**
@@ -179,6 +221,7 @@ class OrderController extends Controller
      */
     public function getAvailableDeliveryTime($restaurateurId) {
         $restaurateur = Restaurateur::find($restaurateurId);
+
         if(isset($restaurateur)) {
             $now = new DateTime();
             $nowDay = (int) $now->format('d');
@@ -195,9 +238,6 @@ class OrderController extends Controller
                 foreach($openingTimes as $time) {
                     $start = new DateTime($time->opening_time);
                     $start->setDate($nowYear, $nowMonth, $nowDay);
-                    if($start < $now) {
-                        $start = clone $now;
-                    }
                     $startMinutes = (int) $start->format('i');
                     $startHour = (int) $start->format('H');
 
@@ -214,6 +254,12 @@ class OrderController extends Controller
                     if($now >= $end) {
                         //Ignore current opening time
                         continue;
+                    }
+
+                    if($start < $now) {
+                        $start = clone $now;
+                        $startMinutes = (int) $start->format('i');
+                        $startHour = (int) $start->format('H');
                     }
 
                     if(($startMinutes != 0) && ($startMinutes != 30)) {

@@ -23,6 +23,10 @@ const SHOP_TYPE = '/shopType';
 const PRODUCT = "/product";
 const OPENING_TIMES = "/openingTimes";
 
+/*
+ * Customer endpoints
+ */
+
 Route::post(CUSTOMER, 'CustomerController@create');
 Route::post(CUSTOMER.'/login', 'CustomerController@login');
 Route::post(CUSTOMER.'/{id}/testNotification', 'CustomerController@testNotification');
@@ -33,8 +37,12 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::delete(CUSTOMER.'/delete', 'CustomerController@delete');
 
     Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
-    Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@read');
+    Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@readAsCustomer');
 });
+
+/*
+ * Restaurateur endpoints
+ */
 
 Route::post(RESTAURATEUR, 'RestaurateurController@create');
 Route::post(RESTAURATEUR.'/login', 'RestaurateurController@login');
@@ -58,6 +66,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
 
     Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurDeliveredOrders');
     Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurPendingOrders');
+    Route::get(RESTAURATEUR.ORDER.'/{id}', 'OrderController@readAsRestaurateur');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
 
@@ -66,6 +75,10 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 });
+
+/*
+ * Rider endpoints
+ */
 
 Route::post(RIDER, 'RiderController@create');
 Route::post(RIDER.'/login', 'RiderController@login');
@@ -79,6 +92,10 @@ Route::middleware(['auth:rider'])->group(function () {
 
     Route::post(RIDER.'/location', 'RiderController@setCurrentLocation');
 });
+
+/*
+ * Others
+ */
 
 Route::get(CITY.'/{id}', 'CityController@read');
 Route::get(CITY, 'CityController@readAll');
