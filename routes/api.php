@@ -91,6 +91,9 @@ Route::middleware(['auth:rider'])->group(function () {
     Route::delete(RIDER.'/delete', 'RiderController@delete');
 
     Route::post(RIDER.'/location', 'RiderController@setCurrentLocation');
+
+    Route::get(RIDER.ORDER.'/assigned', 'OrderController@readRiderAssignedOrders');
+    Route::get(RIDER.ORDER.'/{id}', 'OrderController@readAsRider');
 });
 
 /*

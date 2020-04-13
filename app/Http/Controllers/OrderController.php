@@ -18,7 +18,9 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     private const CUSTOMER_ORDER_RELATIONSHIP = ['restaurateur'];
-    private const RESTAURATEUR_ORDER_RELATIONSHIP = ['products', 'customer', 'rider'];
+    private const RESTAURATEUR_ORDER_RELATIONSHIP = ['customer', 'rider'];
+    private const RIDER_ORDER_RELATIONSHIP = ['customer', 'restaurateur'];
+
     /**
      * Create new order
      */
@@ -303,6 +305,50 @@ class OrderController extends Controller
         else {
             $message = ['message' => 'Restaurateur not found'];
             $code = HttpResponseCode::NOT_FOUND;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    /**
+     * Get details for a given order from rider side
+     */
+    public function readAsRider($orderId) {
+        $rider = Auth::guard("rider")->user();
+
+        if(isset($rider)) {
+            $order = $rider->orders()->with(OrderController::RIDER_ORDER_RELATIONSHIP)->where('id', $orderId)->get();
+            if(isset($order[0])) {
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+            }
+            else {
+                $message = ['message' => 'Order not found'];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    /**
+     * Get the list of assigned orders for the current logged in rider
+     * The rider must be logged in
+     */
+    public function readRiderAssignedOrders() {
+        $rider = Auth::guard("rider")->user();
+
+        if(isset($rider)) {
+            $message = $rider->orders()->where('delivered', false)->with(OrderController::RIDER_ORDER_RELATIONSHIP)->orderBy('estimated_delivery_time', 'asc')->get();
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = ['message' => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
 
         return response()->json($message, $code);
