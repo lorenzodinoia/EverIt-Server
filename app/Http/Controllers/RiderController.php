@@ -42,13 +42,14 @@ class RiderController extends Controller
      */
     public function read($id) {
         $rider = Rider::find($id);
-        if(isset($rider)){
+
+        if(isset($rider)) {
             $message = $rider;
             $code = HttpResponseCode::OK;
         }
-        else{
-            $message = "Can't find rider";
-            $code = HttpResponseCode::BAD_REQUEST;
+        else {
+            $message = ['message' => 'Rider not found'];
+            $code = HttpResponseCode::NOT_FOUND;
         }
 
         return response()->json($message, $code);
@@ -65,7 +66,7 @@ class RiderController extends Controller
             $code = HttpResponseCode::OK;
         }
         else {
-            $message = "Unauthorized";
+            $message = ['message' => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -76,7 +77,6 @@ class RiderController extends Controller
      * Update data of the current logged in rider
      */
     public function update(Request $newData) {
-
         $rider = Auth::guard('rider')->user();
         $id = $rider->id;
 
@@ -100,7 +100,7 @@ class RiderController extends Controller
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ['message' => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -115,17 +115,17 @@ class RiderController extends Controller
 
         if(isset($rider)){
             $deleted = $rider->delete();
-            if($deleted){
-                $message = "Deleted";
+            if($deleted) {
+                $message = ['message' => "Deleted"];
                 $code = HttpResponseCode::OK;
             }
-            else{
-                $message = "Can't delete rider";
+            else {
+                $message = ['message' => "Unable to delete rider"];
                 $code = HttpResponseCode::SERVER_ERROR;
             }
         }
-        else{
-            $message = "Unauthorized";
+        else {
+            $message = ['message' => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -160,7 +160,7 @@ class RiderController extends Controller
         $rider = Auth::guard('rider')->user();
         if(isset($rider)) {
             $rider->removeApiToken();
-            $restaurateur->removeDeviceId();
+            $rider->removeDeviceId();
             $message = ['message' => 'Logout'];
             $code = HttpResponseCode::OK;
         }
@@ -176,8 +176,8 @@ class RiderController extends Controller
      * Test method to send notification
      */
     public function testNotification(Request $request, $id) {
-        $customer = Rider::find($id);
-        $result = $customer->sendNotification($request->title, $request->message);
+        $rider = Rider::find($id);
+        $result = $rider->sendNotification($request->title, $request->message);
         return response()->json($result);
     }
 
