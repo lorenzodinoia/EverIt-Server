@@ -27,7 +27,7 @@ class ProductController extends Controller
                     $product->name = $request->name;
                     $product->price = $request->price;
                     $product->details = $request->details;
-                    $product->productCategory()->associate($category);
+                    $product->productCategory()->associate($categoryId);
                     $product->save();
                     $message = $product;
                     $code = HttpResponseCode::CREATED;
@@ -91,13 +91,13 @@ class ProductController extends Controller
      * The restaurateur must be logged in
      */
     //TODO effettuare appartenenza del prodotto al ristoratore?
-    public function update(Request $request, $id) {
+    public function update(Request $request, $idCategory, $id) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
             $product = Product::find($id);
             if(isset($product)) {
-                $category = ProductCategory::find($request->categoryId);
-                if (isset($category)) {
+                $category = $restaurateur->productCategories()->where("id", $idCategory)->first()->get();
+                if (isset($category[0])) {
                     $validator = Product::checkCreateRequest($request);
                     if ($validator->fails()) {
                         $product->name = $request->name;

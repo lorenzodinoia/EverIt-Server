@@ -70,8 +70,10 @@ Route::middleware(['auth:restaurateur'])->group(function () {
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
     Route::put(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@update');
+    Route::delete(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@delete');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}'.PRODUCT, 'ProductController@create');
+    Route::post(RESTAURATEUR.PRODUCT_CATEGORY.'/{idCategory}'.PRODUCT.'{id}', 'ProductController@update');
 
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');

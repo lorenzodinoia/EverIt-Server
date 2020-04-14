@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use App\ProductCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class ProductCategoryController extends Controller
 {
@@ -61,18 +62,18 @@ class ProductCategoryController extends Controller
      */
     public function update(Request $request, $id) {
         $restaurateur = Auth::guard('restaurateur')->user();
-        //TODO aggiungere controllo se categoria appartiene a ristoratore
         if(isset($restaurateur)){
-            $category = ProductCategory::find($id);
-            if(isset($category)){
-                $category->name = $request->name;
-                $category->save();
+            $category = $restaurateur->productCategories()->where("id", $id)->first()->get();
+            if(isset($category[0])){
+                $newCategory = $category[0];
+                $newCategory->name = $request->name;
+                $newCategory->save();
                 $message = ProductCategory::find($id);
                 $code = HttpResponseCode::OK;
             }
             else{
                 $message = "Category not found";
-                $code = HttpResponseCode::NOT_FOUND;
+                $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
@@ -87,14 +88,31 @@ class ProductCategoryController extends Controller
      *
      */
     public function delete(Request $request, $id) {
-        //TODO controllare appartenenza categoria prodotto a ristoratore
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
-
+            $category = $restaurateur->productCategories()->where("id", $id)->first()->get();
+            if(isset($category[0])){
+                $categoryTarget = $category[0];
+                $deleted = $categoryTarget->delete();
+                if($deleted) {
+                    $message = "Deleted";
+                    $code = HttpResponseCode::OK;
+                }
+                else{
+                    $message = "Can't delete product category";
+                    $code = HttpResponseCode::SERVER_ERROR;
+                }
+            }
+            else{
+                $message = "Category not found";
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
         }
         else{
             $message = "Unauthorized";
             $code = HttpResponseCode::UNAUTHORIZED;
         }
+
+        return response()->json($message, $code);
     }
 }
