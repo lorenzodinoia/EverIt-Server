@@ -48,7 +48,8 @@ class Product extends Model
     public static function checkCreateRequest(Request $request) {
         $rules = [
             'name' => 'required|string',
-            'price' => 'required|numeric'
+            'price' => 'required|numeric',
+            'details' => 'required|string'
         ];
 
         $message = [

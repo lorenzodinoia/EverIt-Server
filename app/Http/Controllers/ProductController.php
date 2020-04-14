@@ -8,7 +8,6 @@ use App\Restaurateur;
 use App\HttpResponseCode;
 use App\ProductCategory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
 {
@@ -90,22 +89,25 @@ class ProductController extends Controller
      * Update data of a product
      * The restaurateur must be logged in
      */
-    //TODO effettuare appartenenza del prodotto al ristoratore?
-    public function update(Request $request, $idCategory, $id) {
+    public function update(Request $request, $id) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
+            //$product = $restaurateur->products()->where("id", $id)->first()->get();
+            /*$product = Restaurateur::whereHas('products', function (Builder $query) {
+                $query->where('id', '$id');
+            })->get();*/
             $product = Product::find($id);
             if(isset($product)) {
-                $category = $restaurateur->productCategories()->where("id", $idCategory)->first()->get();
+                $category = $restaurateur->productCategories()->where("products.id", $request->product_category_id)->first()->get();
                 if (isset($category[0])) {
                     $validator = Product::checkCreateRequest($request);
-                    if ($validator->fails()) {
+                    if (!$validator->fails()) {
                         $product->name = $request->name;
                         $product->price = $request->price;
                         $product->details = $request->details;
-                        $product->productCategory()->associate($category);
+                        $product->productCategory()->associate($category[0]->id);
                         $product->save();
-                        $message = Product::find($product->id);
+                        $message = Product::find($id);
                         $code = HttpResponseCode::OK;
                     }
                     else{
@@ -151,7 +153,10 @@ class ProductController extends Controller
             }
         }
         else{
-            //$message = "I"
+            $message = "Product not found";
+            $code = HttpResponseCode::BAD_REQUEST;
         }
+
+        return response()->json($message, $code);
     }
 }

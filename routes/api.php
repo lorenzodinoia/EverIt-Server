@@ -63,6 +63,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::delete(RESTAURATEUR.'/delete', 'RestaurateurController@delete');
     Route::post(RESTAURATEUR.'/addProducts', 'RestaurateurController@addProducts');
     Route::get(RESTAURATEUR.'/current/productCategories', 'RestaurateurController@readProductCategories');
+    Route::post(RESTAURATEUR.'/image', 'ImageController@saveImageRestaurateur');
+    Route::delete(RESTAURATEUR.'/image', 'ImageController@deleteImageRestaurateur');
 
     Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurDeliveredOrders');
     Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurPendingOrders');
@@ -73,7 +75,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::delete(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@delete');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}'.PRODUCT, 'ProductController@create');
-    Route::post(RESTAURATEUR.PRODUCT_CATEGORY.'/{idCategory}'.PRODUCT.'{id}', 'ProductController@update');
+    Route::put(RESTAURATEUR.PRODUCT.'/{id}', 'ProductController@update');
+    Route::delete(RESTAURATEUR.PRODUCT.'/{id}', 'ProductController@delete');
 
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
