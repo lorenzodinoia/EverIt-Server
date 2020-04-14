@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illimunate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class Product extends Model
@@ -16,7 +16,8 @@ class Product extends Model
      * Define the inverse one (restaurateurs) to many (products) relationship
      */
     public function restaurateur() {
-        //TODO Boh
+        //TODO check relationship
+        return $this->belongsTo('App\Restaurateur');
     }
 
     /**
@@ -47,11 +48,14 @@ class Product extends Model
     public static function checkCreateRequest(Request $request) {
         $rules = [
             'name' => 'required|string',
-            'price' => 'required|numeric',
-            'product_category_id' => 'required|integer',
-            'restaurateur_id' => 'required|integer'
+            'price' => 'required|numeric'
         ];
 
-        return (!Validator::make($request->all(), $rules)->fails());  
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string',
+            'numeric' => ':attribute must be numeric'
+        ];
+        return Validator::make($request->all(), $rules, $message);
     }
 }

@@ -34,7 +34,7 @@ class ProductCategoryController extends Controller
             $message = ["message" => "User not authorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
-        
+
         return response()->json($message, $code);
     }
 
@@ -57,16 +57,44 @@ class ProductCategoryController extends Controller
     }
 
     /**
-     * 
+     *
      */
     public function update(Request $request, $id) {
+        $restaurateur = Auth::guard('restaurateur')->user();
+        //TODO aggiungere controllo se categoria appartiene a ristoratore
+        if(isset($restaurateur)){
+            $category = ProductCategory::find($id);
+            if(isset($category)){
+                $category->name = $request->name;
+                $category->save();
+                $message = ProductCategory::find($id);
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = "Category not found";
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
 
+        return response()->json($message, $code);
     }
 
     /**
-     * 
+     *
      */
     public function delete(Request $request, $id) {
-        
+        //TODO controllare appartenenza categoria prodotto a ristoratore
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
     }
 }
