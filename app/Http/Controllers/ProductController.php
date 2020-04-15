@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function create(Request $request, $categoryId) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {
-            $category = $restaurateur->productCategories()->where("id", $categoryId)->first()->get();
+            $category = $restaurateur->productCategories()->where("id", $categoryId)->get();
             if(isset($category[0])) {
                 $validator = Product::checkCreateRequest($request);
                 if(!$validator->fails()) {
@@ -92,21 +92,17 @@ class ProductController extends Controller
     public function update(Request $request, $id) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
-            //$product = $restaurateur->products()->where("id", $id)->first()->get();
-            /*$product = Restaurateur::whereHas('products', function (Builder $query) {
-                $query->where('id', '$id');
-            })->get();*/
-            $product = Product::find($id);
-            if(isset($product)) {
-                $category = $restaurateur->productCategories()->where("products.id", $request->product_category_id)->first()->get();
+            $product = $restaurateur->products()->where("products.id", $id)->get();
+            if(isset($product[0])) {
+                $category = $restaurateur->productCategories()->where("product_categories.id", $request->product_category_id)->get();
                 if (isset($category[0])) {
-                    $validator = Product::checkCreateRequest($request);
+                    $validator = Product::checkUpdateRequest($request);
                     if (!$validator->fails()) {
-                        $product->name = $request->name;
-                        $product->price = $request->price;
-                        $product->details = $request->details;
-                        $product->productCategory()->associate($category[0]->id);
-                        $product->save();
+                        $product[0]->name = $request->name;
+                        $product[0]->price = $request->price;
+                        $product[0]->details = $request->details;
+                        $product[0]->productCategory()->associate($request->product_category_id);
+                        $product[0]->save();
                         $message = Product::find($id);
                         $code = HttpResponseCode::OK;
                     }
@@ -137,24 +133,28 @@ class ProductController extends Controller
      * Delete a product
      * The restaurateur must be logged in
      */
-    //TODO effettuare appartenenza del prodotto al ristoratore?
     public function delete($id) {
 
-        $product = Product::find($id);
-        if(isset($product)){
-            $deleted = $product->delete();
-            if($deleted){
-                $message = "Product deleted";
-                $code = HttpResponseCode::OK;
-            }
-            else{
-                $message = "Can't delete product";
-                $code = HttpResponseCode::SERVER_ERROR;
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)) {
+            $product = $restaurateur->products()->where("products.id", $id)->get();
+            if (isset($product[0])) {
+                $deleted = $product[0]->delete();
+                if ($deleted) {
+                    $message = "Product deleted";
+                    $code = HttpResponseCode::OK;
+                } else {
+                    $message = "Can't delete product";
+                    $code = HttpResponseCode::SERVER_ERROR;
+                }
+            } else {
+                $message = "Product not found";
+                $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Product not found";
-            $code = HttpResponseCode::BAD_REQUEST;
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
 
         return response()->json($message, $code);

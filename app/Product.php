@@ -16,7 +16,6 @@ class Product extends Model
      * Define the inverse one (restaurateurs) to many (products) relationship
      */
     public function restaurateur() {
-        //TODO check relationship
         return $this->belongsTo('App\Restaurateur');
     }
 
@@ -56,6 +55,23 @@ class Product extends Model
             'required' => ':attribute required',
             'string' => ':attribute must be string',
             'numeric' => ':attribute must be numeric'
+        ];
+        return Validator::make($request->all(), $rules, $message);
+    }
+
+    public static function checkUpdateRequest(Request $request) {
+        $rules = [
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'details' => 'required|string',
+            'product_category_id' => 'required|integer'
+        ];
+
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string',
+            'numeric' => ':attribute must be numeric',
+            'integer' => ':attribute must be integer'
         ];
         return Validator::make($request->all(), $rules, $message);
     }
