@@ -22,6 +22,7 @@ const PRODUCT_CATEGORY = '/productCategory';
 const SHOP_TYPE = '/shopType';
 const PRODUCT = "/product";
 const OPENING_TIMES = "/openingTimes";
+const FEEDBACK = "/feedback";
 
 /*
  * Customer endpoints
@@ -38,6 +39,10 @@ Route::middleware(['auth:customer'])->group(function () {
 
     Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
     Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@readAsCustomer');
+
+    Route::post(RESTAURATEUR.'/{idRestaurateur}'.FEEDBACK, 'FeedbackController@create');
+    Route::put(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@update');
+    Route::delete(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@delete');
 });
 
 /*
@@ -66,6 +71,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.'/image', 'ImageController@saveImageRestaurateur');
     Route::delete(RESTAURATEUR.'/image', 'ImageController@deleteImageRestaurateur');
 
+
     Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurDeliveredOrders');
     Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurPendingOrders');
     Route::get(RESTAURATEUR.ORDER.'/{id}', 'OrderController@readAsRestaurateur');
@@ -80,6 +86,9 @@ Route::middleware(['auth:restaurateur'])->group(function () {
 
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
+
+    Route::get(RESTAURATEUR.'/{id}'.FEEDBACK.'/all', 'FeedbackController@showAllFeedbackRestaurateur');
+
 });
 
 /*

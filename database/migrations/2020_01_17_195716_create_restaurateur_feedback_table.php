@@ -14,6 +14,7 @@ class CreateRestaurateurFeedbackTable extends Migration
     public function up()
     {
         Schema::create('restaurateur_feedback', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('restaurateur_id');
             $table->integer('vote')->default(1)->unsigned();
@@ -21,8 +22,6 @@ class CreateRestaurateurFeedbackTable extends Migration
 
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->foreign('restaurateur_id')->references('id')->on('restaurateurs')->onDelete('cascade');
-
-            $table->primary(['customer_id', 'restaurateur_id']);
         });
     }
 

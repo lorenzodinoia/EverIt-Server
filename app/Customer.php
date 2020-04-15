@@ -37,6 +37,10 @@ class Customer extends Authenticatable
         return $this->hasMany('App\Order');
     }
 
+    public function restaurateur(){
+        return $this->hasManyThrough('App\Restaurateur', 'App\Feedback');
+    }
+
     /**
      * Check if the request is well formatted
      */
