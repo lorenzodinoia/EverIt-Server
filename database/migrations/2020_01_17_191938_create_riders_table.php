@@ -24,6 +24,7 @@ class CreateRidersTable extends Migration
             $table->double('last_latitude')->nullable();
             $table->double('last_longitude')->nullable();
             $table->dateTime('location_update')->nullable();
+            $table->boolean('operating')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

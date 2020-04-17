@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
+/*
+ * Status order legend
+ *  -1 order issue
+ *  0 not ordered
+ *  1 under processing
+ *  2 delivering
+ *  3 delivered
+ */
 class OrderController extends Controller
 {
     private const CUSTOMER_ORDER_RELATIONSHIP = ['restaurateur'];
@@ -52,6 +60,9 @@ class OrderController extends Controller
                         $order->delivery_notes = $request->delivery_notes;
                     }
                     $order->validation_code = (string)rand(10000, 99999);//Generates 5 digits number as validation code
+                    $order->latitude = $request->latitude;
+                    $order->longitude = $request->longitude;
+                    $order->status = 1;
                     $order->customer()->associate($customer->id);
                     $order->restaurateur()->associate($restaurateur);
                     $order->save();

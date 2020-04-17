@@ -201,4 +201,36 @@ class RiderController extends Controller
 
         return response()->json($message, $code);
     }
+
+    public function startService(){
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)){
+            $rider->operating = true;
+            $rider->save();
+            $message = ['message' => 'Service started'];
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function stopService(){
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)){
+            $rider->operating = false;
+            $rider->save();
+            $message = ['message' => 'Service stopped'];
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }

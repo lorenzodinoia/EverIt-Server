@@ -58,14 +58,17 @@ class Order extends Model
             'delivery_address' => 'required|string',
             'estimated_delivery_time' => 'required|date_format:H:i',
             'products.*.id' => 'required|integer',
-            'products.*.quantity' => 'integer'
+            'products.*.quantity' => 'integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric'
         ];
 
         $message = [
             'required' => ':attribute required',
             'string' => ':attribute must be string',
             'date_format' => ':attribute must respect time format (H:i)',
-            'integer' => ':attribute must be integer'
+            'integer' => ':attribute must be integer',
+            'numeric' => ':attribure must be numeric'
         ];
 
         return Validator::make($request->all(), $rules, $message);

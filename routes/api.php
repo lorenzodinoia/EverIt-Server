@@ -37,6 +37,7 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::put(CUSTOMER.'/update', 'CustomerController@update');
     Route::delete(CUSTOMER.'/delete', 'CustomerController@delete');
 
+    Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
     Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
     Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@readAsCustomer');
 
@@ -100,6 +101,8 @@ Route::post(RIDER.'/login', 'RiderController@login');
 Route::get(RIDER.'/{id}','RiderController@read');
 Route::post(RIDER.'/{id}/testNotification', 'RiderController@testNotification');
 Route::middleware(['auth:rider'])->group(function () {
+    Route::post(RIDER.'/start', 'RiderController@startService');
+    Route::post(RIDER.'/stop', 'RiderController@stopService');
     Route::post(RIDER.'/logout', 'RiderController@logout');
     Route::get(RIDER, 'RiderController@readCurrent');
     Route::put(RIDER.'/update', 'RiderController@update');
