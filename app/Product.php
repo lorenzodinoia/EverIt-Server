@@ -48,7 +48,7 @@ class Product extends Model
         $rules = [
             'name' => 'required|string',
             'price' => 'required|numeric',
-            'details' => 'required|string'
+            'details' => 'string'
         ];
 
         $message = [
@@ -63,7 +63,7 @@ class Product extends Model
         $rules = [
             'name' => 'required|string',
             'price' => 'required|numeric',
-            'details' => 'required|string',
+            'details' => 'string',
             'product_category_id' => 'required|integer'
         ];
 

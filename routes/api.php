@@ -112,6 +112,7 @@ Route::middleware(['auth:rider'])->group(function () {
 
     Route::get(RIDER.ORDER.'/assigned', 'OrderController@readRiderAssignedOrders');
     Route::get(RIDER.ORDER.'/{id}', 'OrderController@readAsRider');
+    Route::post(RIDER.ORDER.'/{id}/confirmLocation', 'OrderController@confirmRiderInRestaurant');
 });
 
 /*

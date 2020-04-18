@@ -15,18 +15,25 @@ class CreateDistanceFunction extends Migration
     {
         DB::unprepared('
         DROP PROCEDURE IF EXISTS DISTANCE;
-        CREATE FUNCTION DISTANCE (clat DOUBLE, clng DOUBLE, rlat DOUBLE, rlng DOUBLE)
-        RETURNS INTEGER
-        DETERMINISTIC
+        CREATE DEFINER=`root`@`localhost` FUNCTION `DISTANCE`(lat1 FLOAT, lon1 FLOAT, lat2 FLOAT, lon2 FLOAT) RETURNS float
+            NO SQL
+            DETERMINISTIC
         BEGIN
-            DECLARE decimal_distance DOUBLE;
-            DECLARE distance INT;
-            SET decimal_distance = ( 6371 * acos( cos( radians(clat) )
-            * cos( radians( rlat ) )
-            * cos( radians( rlng ) - radians(clng) ) + sin( radians(clat) )
-            * sin( radians( rlat ) ) ) );
-            SET distance = FLOOR(decimal_distance);
-            RETURN distance;
+            DECLARE r FLOAT UNSIGNED DEFAULT 6372.8;
+            DECLARE dLat FLOAT UNSIGNED;
+            DECLARE dLon FLOAT UNSIGNED;
+            DECLARE a FLOAT UNSIGNED;
+            DECLARE c FLOAT UNSIGNED;
+
+            SET dLat = ABS(RADIANS(lat2 - lat1));
+            SET dLon = ABS(RADIANS(lon2 - lon1));
+            SET lat1 = RADIANS(lat1);
+            SET lat2 = RADIANS(lat2);
+
+            SET a = POW(SIN(dLat / 2), 2) + COS(lat1) * COS(lat2) * POW(SIN(dLon / 2), 2);
+            SET c = 2 * ASIN(SQRT(a));
+
+            RETURN (r * c);
         END
         ');
     }

@@ -25,7 +25,9 @@ class ProductController extends Controller
                     $product = new Product;
                     $product->name = $request->name;
                     $product->price = $request->price;
-                    $product->details = $request->details;
+                    if(isset($request->details)) {
+                        $product->details = $request->details;
+                    }
                     $product->productCategory()->associate($categoryId);
                     $product->save();
                     $message = $product;

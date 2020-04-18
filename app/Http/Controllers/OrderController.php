@@ -222,14 +222,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Mark an order as in delivering
-     * The restaurateur must be logged in
-     */
-    public function markAsInDelivering($orderId) {
-
-    }
-
-    /**
      * Generates a set of times which can be used to delivery customer's orders
      */
     public function getAvailableDeliveryTime($restaurateurId) {
@@ -363,5 +355,56 @@ class OrderController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    /**
+     * Confirm that the rider is inside the restaurant by GPS location
+     * The rider must be logged in
+     */
+    public function confirmRiderInRestaurant(Request $request, $orderId) {
+        $rider = Auth::guard('rider')->user();
+        $maxDistance = 0.2;
+
+        if(isset($rider)) {
+            $order = $rider->orders()->where('id', $orderId)->get();
+            if(isset($order[0])) {
+                $restaurant = $order[0]->restaurateur()->get()[0];
+                $nearbyRestaurant =  Restaurateur::whereRaw("DISTANCE(?, ?, latitude, longitude) <= ?", [$request->latitude, $request->longitude, $maxDistance])->pluck('id')->all();
+                if(in_array($restaurant->id, $nearbyRestaurant)) {
+                    $this->markAsInDelivering($order[0]);
+                    $message = ['message' => 'Ok'];
+                    $code = HttpResponseCode::OK;
+                }
+                else {
+                    $message = ['message' => 'The restaurant is not nearby'];
+                    $code = HttpResponseCode::BAD_REQUEST;
+                }
+            }
+            else {
+                $message = ['message' => 'Order not found'];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    /**
+     * Mark an order as in delivering when the rider comes in the restaurant for take the order
+     * Function used only from Controller, no routes available
+     */
+    private function markAsInDelivering(Order $order) {
+        $order->status = 1;
+        $order->save();
+        $customer = $order->customer()->get()[0];
+        if(isset($customer)) {
+            $notificationFormat = "Il tuo ordine da %s sarà consegnato a breve";
+            $notificationMessage = sprintf($notificationFormat, $order->restaurateur()->get()[0]->name);
+            $customer->sendNotification("Ordine in consegna", $notificationMessage);
+        }
     }
 }
