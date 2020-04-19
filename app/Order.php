@@ -42,6 +42,10 @@ class Order extends Model
         return $this->belongsTo('App\Restaurateur');
     }
 
+    public function proposals() {
+        return $this->hasMany('App\Proposal');
+    }
+
     /**
      * Get the restaurateur as field
      */

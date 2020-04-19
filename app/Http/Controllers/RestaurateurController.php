@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Proposal;
 use App\Restaurateur;
 use App\City;
 use App\ShopType;
 use App\ProductCategory;
 use App\Product;
+use App\Rider;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class RestaurateurController extends Controller
 {
@@ -290,6 +291,39 @@ class RestaurateurController extends Controller
         else {
             $message = ['message' => "Coordinates not provided"];
             $code = HttpResponseCode::BAD_REQUEST;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function searchRider($idOrder){
+        $radius = 3;
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $riders = Rider::havingRaw("DISTANCE(?, ?, last_latitude, last_longitude) <= ?", [$restaurateur->latitude, $restaurateur->longitude, $radius])->get();
+            if(isset($riders[0])){
+                foreach($riders as $rider){
+                    $proposal = new Proposal();
+                    $proposal->riders()->associate($rider->id);
+                    $proposal->order()->associate($idOrder);
+                    $proposal->restaurateur()->associate($restaurateur->id);
+                    $proposal->save();
+                    $notificationFormat = "Hai ricevuto una proposta di consegna da %s";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
+                    $rider->sendNotification('Proposta consegna', $notificationMessage);
+
+                    $message = ['message' => 'Ok'];
+                    $code = HttpResponseCode::OK;
+                }
+            }
+            else{
+                $message = ['message' => "No rider found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
+            $message = ['message' => 'Unatuhorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
         }
 
         return response()->json($message, $code);

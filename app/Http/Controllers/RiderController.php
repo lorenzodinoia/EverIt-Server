@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Restaurateur;
 use App\Rider;
+use App\Order;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
@@ -222,6 +224,8 @@ class RiderController extends Controller
         $rider = Auth::guard('rider')->user();
         if(isset($rider)){
             $rider->operating = false;
+            $rider->longitude = null;
+            $rider->latitude = null;
             $rider->save();
             $message = ['message' => 'Service stopped'];
             $code = HttpResponseCode::OK;
@@ -233,4 +237,5 @@ class RiderController extends Controller
 
         return response()->json($message, $code);
     }
+
 }

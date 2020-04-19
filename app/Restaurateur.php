@@ -84,7 +84,7 @@ class Restaurateur extends Authenticatable
             'longitude' => 'required|numeric',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
-            'password' => 'required|string',
+            'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
             'vat_number' => 'required|string|between:1,11',
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
@@ -99,7 +99,8 @@ class Restaurateur extends Authenticatable
             'between' => ':attribute must be between :min and :max',
             'email' => ':attribute must respect email standard',
             'numeric' => ':attribute must be numeric',
-            'integer' => ':attribute must be integer'
+            'integer' => ':attribute must be integer',
+            'regex' => ':attribute must respect format'
         ];
 
         return Validator::make($request->all(), $rules, $message);
@@ -111,7 +112,7 @@ class Restaurateur extends Authenticatable
             'address' => 'required|string',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
-            'password' => 'string',
+            'password' => 'string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
             'vat_number' => 'required|string|between:1,11',
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
@@ -126,7 +127,8 @@ class Restaurateur extends Authenticatable
             'between' => ':attribute must be between :min and :max',
             'email' => ':attribute must respect email standard',
             'numeric' => ':attribute must be numeric',
-            'integer' => ':attribute must be integer'
+            'integer' => ':attribute must be integer',
+            'regex' => ':attribute must respect format'
         ];
 
         return Validator::make($request->all(), $rules, $message);

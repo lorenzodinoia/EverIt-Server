@@ -50,13 +50,14 @@ class Customer extends Authenticatable
             'surname' => 'required|string|between:1,50',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
-            'password' => 'required|string',
+            'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
         ];
         $message = [
           'required' => ':attribute required',
           'string' => ':attribute must be string',
           'between' => ':attribute must be between :min and :max',
-          'email' => ':attribute must respect email standard'
+          'email' => ':attribute must respect email standard',
+            'regex' => ':attribute must respect format'
         ];
 
         return Validator::make($request->all(), $rules, $message);
@@ -71,13 +72,14 @@ class Customer extends Authenticatable
             'surname' => 'required|string|between:1,50',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
-            'password' => 'string',
+            'password' => 'string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
         ];
         $message = [
             'required' => ':attribute required',
             'string' => ':attribute must be string',
             'between' => ':attribute must be between :min and :max',
-            'email' => ':attribute must respect email standard'
+            'email' => ':attribute must respect email standard',
+            'regex' => ':attribute must respect format'
         ];
 
         return Validator::make($request->all(), $rules, $message);

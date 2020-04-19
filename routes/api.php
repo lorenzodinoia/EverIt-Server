@@ -23,6 +23,7 @@ const SHOP_TYPE = '/shopType';
 const PRODUCT = "/product";
 const OPENING_TIMES = "/openingTimes";
 const FEEDBACK = "/feedback";
+const PROPOSAL = "/proposal";
 
 /*
  * Customer endpoints
@@ -76,6 +77,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurDeliveredOrders');
     Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurPendingOrders');
     Route::get(RESTAURATEUR.ORDER.'/{id}', 'OrderController@readAsRestaurateur');
+    Route::post(RESTAURATEUR.ORDER.'/{idOrder}/searchRider', 'RestaurateurController@searchRider');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
     Route::put(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@update');
@@ -113,6 +115,9 @@ Route::middleware(['auth:rider'])->group(function () {
     Route::get(RIDER.ORDER.'/assigned', 'OrderController@readRiderAssignedOrders');
     Route::get(RIDER.ORDER.'/{id}', 'OrderController@readAsRider');
     Route::post(RIDER.ORDER.'/{id}/confirmLocation', 'OrderController@confirmRiderInRestaurant');
+
+    Route::post(RIDER.PROPOSAL.'/{id}/accept', 'ProposalController@acceptProposal');
+    Route::post(RIDER.PROPOSAL.'/{id}/refuse', 'ProposalController@refuseProposal');
 });
 
 /*
