@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -50,6 +54,23 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+
+        if($exception instanceof ModelNotFoundException) {
+            $message = ['message' => 'Object not found'];
+            return response()->json($message, 404);
+        }
+
+        if($exception instanceof QueryException) {
+            $message = $exception->getMessage();
+            $code = $exception->getcode();
+            return response()->json($message, $code);
+        }
+
+        if($exception instanceof AuthenticationException) {
+            $message = ['message' => 'Access denied, user not authenticated'];
+            return response()->json($message, 401);
+        }
+
         return parent::render($request, $exception);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,6 @@ class CustomerController extends Controller
             $createdCustomer->phone_number = $request->phone_number;
             $createdCustomer->email = $request->email;
             $createdCustomer->password = $request->password;
-
             $createdCustomer->save();
             $message = Customer::find($createdCustomer->id);
             $code = HttpResponseCode::CREATED;
