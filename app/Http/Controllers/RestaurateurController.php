@@ -282,10 +282,10 @@ class RestaurateurController extends Controller
         }
     }
 
-    public function searchNearby(Request $request) {
+    public function searchNearby($latitude, $longitude) {
         $radius = 3; //Radius in km
-        if(isset($request->latitude) && isset($request->longitude)) {
-            $message = Restaurateur::havingRaw("DISTANCE(?, ?, latitude, longitude) <= ?", [$request->latitude, $request->longitude, $radius])->get();
+        if(isset($latitude) && isset($longitude)) {
+            $message = Restaurateur::havingRaw("DISTANCE(?, ?, latitude, longitude) <= ?", [$latitude, $longitude, $radius])->get();
             $code = HttpResponseCode::OK;
         }
         else {
