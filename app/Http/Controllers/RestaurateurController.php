@@ -12,6 +12,7 @@ use App\Rider;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RestaurateurController extends Controller
 {
@@ -285,7 +286,7 @@ class RestaurateurController extends Controller
     public function searchNearby($latitude, $longitude) {
         $radius = 3; //Radius in km
         if(isset($latitude) && isset($longitude)) {
-            $message = Restaurateur::havingRaw("DISTANCE(?, ?, latitude, longitude) <= ?", [$latitude, $longitude, $radius])->get();
+            $message = Restaurateur::whereRaw("DISTANCE(?, ?, latitude, longitude) <= ?", [$latitude, $longitude, $radius])->get();
             $code = HttpResponseCode::OK;
         }
         else {
