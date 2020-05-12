@@ -21,7 +21,7 @@ const CITY = '/city';
 const PRODUCT_CATEGORY = '/productCategory';
 const SHOP_TYPE = '/shopType';
 const PRODUCT = "/product";
-const OPENING_DAYS = "/openingDays";
+const OPENING_TIMES = "/openingTimes";
 const FEEDBACK = "/feedback";
 const PROPOSAL = "/proposal";
 
@@ -87,8 +87,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::put(RESTAURATEUR.PRODUCT.'/{id}', 'ProductController@update');
     Route::delete(RESTAURATEUR.PRODUCT.'/{id}', 'ProductController@delete');
 
-    Route::post(RESTAURATEUR.OPENING_DAYS, 'OpeningDayController@attach');
-    Route::delete(RESTAURATEUR.OPENING_DAYS.'/{id}', 'OpeningDayController@detach');
+    Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
+    Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 
     Route::get(RESTAURATEUR.'/{id}'.FEEDBACK.'/all', 'FeedbackController@showAllFeedbackRestaurateur');
 

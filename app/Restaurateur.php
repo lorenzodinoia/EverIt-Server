@@ -13,7 +13,7 @@ class Restaurateur extends Authenticatable
 {
     protected $guarded = ['password', 'remember_token', 'image_path', 'device_id'];
     protected $hidden = ['remember_token', 'password', 'device_id'];
-    protected $with = ['city', 'shopType', 'openingDays'];
+    protected $with = ['city', 'shopType', 'openingTimes'];
 
     /**
      * Password field setter
@@ -69,8 +69,8 @@ class Restaurateur extends Authenticatable
         return $this->orders()->where('delivered', true);
     }
 
-    public function openingDays() {
-        return $this->belongsToMany('App\OpeningDay', 'opening_days_restaurateur')->withPivot(['id', 'opening_time', 'closing_time']);
+    public function openingTimes(){
+        return $this->hasMany('App\OpeningTime');
     }
 
     /**
