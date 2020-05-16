@@ -10,8 +10,8 @@ class OpeningTime extends Model
     protected $with = ['openingDay'];
 
     protected $casts = [
-        'opening_time' => 'datetime: H:i',
-        'closing_time' => 'datetime H:i',
+        'opening_time' => 'datetime:H:i',
+        'closing_time' => 'datetime:H:i',
     ];
 
     /**

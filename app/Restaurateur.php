@@ -2,6 +2,9 @@
 
 namespace App;
 
+use Carbon\Carbon;
+use Carbon\Traits\Date;
+use DateTime;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -13,7 +16,8 @@ class Restaurateur extends Authenticatable
 {
     protected $guarded = ['password', 'remember_token', 'image_path', 'device_id'];
     protected $hidden = ['remember_token', 'password', 'device_id'];
-    protected $with = ['city', 'shopType', 'openingTimes'];
+    protected $with = ['city', 'shopType'];
+    protected $appends = ['is_open'];
 
     /**
      * Password field setter
@@ -71,6 +75,35 @@ class Restaurateur extends Authenticatable
 
     public function openingTimes(){
         return $this->hasMany('App\OpeningTime');
+    }
+
+    public function getIsOpenAttribute() {
+        $openingTimes = $this->openingTimes()->get();
+        $now = Carbon::now();
+
+        if (isset($openingTimes)) {
+            $now = new DateTime();
+            $day = (int) $now->format('N');
+
+            foreach ($openingTimes as $time) {
+                if (isset($time->openingDay)) {
+                    if ($time->openingDay['id'] == $day) {
+                        try {
+                            $openingTime = new DateTime($time->opening_time);
+                            $closingTime = new DateTime($time->closing_time);
+                        }
+                        catch (\Exception $e) {
+                            return false;
+                        }
+                        if ($now >= $openingTime && $now <= $closingTime) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

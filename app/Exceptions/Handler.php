@@ -54,16 +54,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-
         if($exception instanceof ModelNotFoundException) {
             $message = ['message' => 'Object not found'];
             return response()->json($message, 404);
         }
 
         if($exception instanceof QueryException) {
-            $message = $exception->getMessage();
-            $code = $exception->getcode();
-            return response()->json($message, $code);
+            $message = ['message' => $exception->getMessage(), 'code' => $exception->getcode()];
+            return response()->json($message, 500);
         }
 
         if($exception instanceof AuthenticationException) {

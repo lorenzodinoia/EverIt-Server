@@ -68,7 +68,7 @@ class RestaurateurController extends Controller
      * Get details for a given restaurateur
      */
     public function read($id) {
-        $restaurateur = Restaurateur::find($id);
+        $restaurateur = Restaurateur::with(['openingTimes', 'productCategories'])->find($id);
         if(isset($restaurateur)){
             $message = $restaurateur;
             $code = HttpResponseCode::OK;
@@ -227,52 +227,6 @@ class RestaurateurController extends Controller
         $customer = Restaurateur::find($id);
         $result = $customer->sendNotification($request->title, $request->message);
         return response()->json($result);
-    }
-
-    //TODO Da moficare in base al nuovo schema
-    public function addProducts(Request $request) {
-        $restaurateur = Auth::guard('restaurateur')->user();
-        if(isset($restaurateur)) {
-            $success = true;
-
-            foreach ($request->products as $product) {
-                if(isset($product['product_category']['id'])) {
-                    $category = ProductCategory::find($categoryId);
-                }
-                else if(isset($product['product_category']['name'])) {
-                    $name = $product['product_category']['name'];
-                    $category = ProductCategory::where('name', $name)->first();
-                    if(!isset($category)) {
-                        $category = new ProductCategory;
-                        $category->name = $name;
-                        $category->restaurateur()->associate($restaurateur);
-                        $category->save();
-                    }
-                }
-
-                if(isset($category)) {
-                    $newProduct = new Product;
-                    $newProduct->name = $product['name'];
-                    $newProduct->price = $product['price'];
-                    $newProduct->details = $product['details'];
-                    $newProduct->restaurateur()->associate($restaurateur);
-                    $newProduct->productCategory()->associate($category);
-                    $newProduct->save();
-                }
-                else {
-                    $success = false;
-                }
-            }
-
-            $message = ['message' => $success];
-            $code = ($success) ? HttpResponseCode::CREATED : HttpResponseCode::SERVER_ERROR;
-        }
-        else {
-            $message = ['message' => 'User not recognized'];
-            $code = HttpResponseCode::UNAUTHORIZED;
-        }
-
-        return response()->json($message, $code);
     }
 
     public function readProductCategories() {

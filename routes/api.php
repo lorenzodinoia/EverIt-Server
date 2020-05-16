@@ -25,6 +25,10 @@ const OPENING_TIMES = "/openingTimes";
 const FEEDBACK = "/feedback";
 const PROPOSAL = "/proposal";
 
+Route::get('echo', function () {
+    return 'Hello World';
+});
+
 /*
  * Customer endpoints
  */
