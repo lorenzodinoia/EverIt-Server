@@ -130,4 +130,25 @@ class FeedbackController extends Controller
 
         return response()->json($message, $code);
     }
+
+    public function showAllCustomerFeedback(){
+        $customer = Auth::guard('customer')->user();
+        if(isset($customer)){
+            $feedback = $customer->feedbacks()->get();
+            if(isset($feedback[0])){
+                $message = $feedback;
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = "No feedback found";
+                $code = HttpResponseCode::OK;
+            }
+        }
+        else{
+            $message = "Unauthorized";
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }
