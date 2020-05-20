@@ -39,7 +39,7 @@ class CustomerController extends Controller
     /**
      * Get details of the current logged in customer
      */
-    public function readCurrent() {
+    public function readCurrent($id) {
         $customer = Auth::guard('customer')->user();
 
         if(isset($customer)) {

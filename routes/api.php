@@ -42,7 +42,7 @@ Route::post(CUSTOMER.'/login', 'CustomerController@login');
 Route::post(CUSTOMER.'/{id}/testNotification', 'CustomerController@testNotification');
 Route::middleware(['auth:customer'])->group(function () {
     Route::post(CUSTOMER.'/logout', 'CustomerController@logout');
-    Route::get(CUSTOMER, 'CustomerController@readCurrent');
+    Route::get(CUSTOMER.'/{id}', 'CustomerController@readCurrent');
     Route::put(CUSTOMER.'/update', 'CustomerController@update');
     Route::delete(CUSTOMER.'/delete', 'CustomerController@delete');
 
@@ -66,7 +66,7 @@ Route::get(RESTAURATEUR.'/{id}','RestaurateurController@read');
 Route::post(RESTAURATEUR.'/{id}/testNotification', 'RestaurateurController@testNotification');
 
 Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY, 'ProductCategoryController@readAll');
-Route::get(RESTAURATEUR.'/{id}'.PRODUCT, 'ProductController@readAllByRestaurateur');
+Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY.PRODUCT, 'ProductController@readAllByRestaurateur');
 
 Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
 Route::get(RESTAURATEUR.'/{id}'.ORDER.'/availableTimes', 'OrderController@getAvailableDeliveryTime');
@@ -93,8 +93,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::delete(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@delete');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}'.PRODUCT, 'ProductController@create');
-    Route::put(RESTAURATEUR.PRODUCT.'/{id}', 'ProductController@update');
-    Route::delete(RESTAURATEUR.PRODUCT.'/{id}', 'ProductController@delete');
+    Route::put(RESTAURATEUR.PRODUCT_CATEGORY.PRODUCT.'/{id}', 'ProductController@update');
+    Route::delete(RESTAURATEUR.PRODUCT_CATEGORY.PRODUCT.'/{id}', 'ProductController@delete');
 
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
