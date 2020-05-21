@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
 {
+    protected $with = ['products'];
     public $timestamps = false;
 
     public function restaurateur() {

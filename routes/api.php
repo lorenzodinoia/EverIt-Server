@@ -67,6 +67,7 @@ Route::post(RESTAURATEUR.'/{id}/testNotification', 'RestaurateurController@testN
 
 Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY, 'ProductCategoryController@readAll');
 Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY.PRODUCT, 'ProductController@readAllByRestaurateur');
+Route::get(RESTAURATEUR.PRODUCT_CATEGORY.'/{categoryId}'.PRODUCT, 'ProductController@readAllByCategory');
 
 Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
 Route::get(RESTAURATEUR.'/{id}'.ORDER.'/availableTimes', 'OrderController@getAvailableDeliveryTime');
