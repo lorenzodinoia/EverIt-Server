@@ -43,8 +43,8 @@ Route::post(CUSTOMER.'/{id}/testNotification', 'CustomerController@testNotificat
 Route::middleware(['auth:customer'])->group(function () {
     Route::post(CUSTOMER.'/logout', 'CustomerController@logout');
     Route::get(CUSTOMER.'/{id}', 'CustomerController@readCurrent');
-    Route::put(CUSTOMER.'/update', 'CustomerController@update');
-    Route::delete(CUSTOMER.'/delete', 'CustomerController@delete');
+    Route::put(CUSTOMER, 'CustomerController@update');
+    Route::delete(CUSTOMER, 'CustomerController@delete');
 
     Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
     Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
