@@ -143,7 +143,7 @@ class ProductController extends Controller
             if (isset($product[0])) {
                 $deleted = $product[0]->delete();
                 if ($deleted) {
-                    $message = "Product deleted";
+                    $message = ["message" => "Product deleted"];
                     $code = HttpResponseCode::OK;
                 } else {
                     $message = "Can't delete product";
