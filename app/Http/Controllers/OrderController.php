@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     private const CUSTOMER_ORDER_RELATIONSHIP = ['restaurateur'];
+    private const PRODUCTS_ORDER_RELATIONSHIP = ['products'];
     private const RESTAURATEUR_ORDER_RELATIONSHIP = ['customer', 'rider'];
     private const RIDER_ORDER_RELATIONSHIP = ['customer', 'restaurateur'];
 
