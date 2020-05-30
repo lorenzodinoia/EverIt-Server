@@ -48,13 +48,13 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::post(CUSTOMER.'/changePassword', 'CustomerController@changePassword');
 
     Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
-    Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
+    Route::get(CUSTOMER.ORDER.'/getAll', 'OrderController@readCustomerOrders');
     Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@readAsCustomer');
 
     Route::post(RESTAURATEUR.'/{idRestaurateur}'.FEEDBACK, 'FeedbackController@create');
     Route::put(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@update');
     Route::delete(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@delete');
-    Route::get(RESTAURATEUR.FEEDBACK, 'FeedbackController@showAllCustomerFeedback');
+    Route::get(RESTAURATEUR.FEEDBACK.'/getAll', 'FeedbackController@showAllCustomerFeedback');
 });
 
 /*

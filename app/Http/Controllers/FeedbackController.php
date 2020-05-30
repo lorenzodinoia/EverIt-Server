@@ -114,14 +114,8 @@ class FeedbackController extends Controller
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
             $feedback = $restaurateur->feedbacks()->get();
-            if(isset($feedback[0])){
-                $message = $feedback;
-                $code = HttpResponseCode::OK;
-            }
-            else{
-                $message = "No feedback found";
-                $code = HttpResponseCode::OK;
-            }
+            $message = $feedback;
+            $code = HttpResponseCode::OK;
         }
         else{
             $message = "Unauthorized";
@@ -135,17 +129,11 @@ class FeedbackController extends Controller
         $customer = Auth::guard('customer')->user();
         if(isset($customer)){
             $feedback = $customer->feedbacks()->get();
-            if(isset($feedback[0])){
-                $message = $feedback;
-                $code = HttpResponseCode::OK;
-            }
-            else{
-                $message = "No feedback found";
-                $code = HttpResponseCode::OK;
-            }
+            $message = $feedback;
+            $code = HttpResponseCode::OK;
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

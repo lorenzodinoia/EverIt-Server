@@ -95,7 +95,7 @@ class ProductCategoryController extends Controller
                 $categoryTarget = $category[0];
                 $deleted = $categoryTarget->delete();
                 if($deleted) {
-                    $message = "Deleted";
+                    $message = ["message" => "Deleted"];
                     $code = HttpResponseCode::OK;
                 }
                 else{
