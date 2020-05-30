@@ -97,16 +97,16 @@ class CustomerController extends Controller
         if(isset($customer)){
             $deleted = $customer->delete();
             if($deleted){
-                $message = "Deleted";
+                $message = ['message' => 'Deleted'];
                 $code = HttpResponseCode::OK;
             }
             else{
-                $message = "Can't delete customer";
+                $message = ['message' => "Can't delete customer"];
                 $code = HttpResponseCode::SERVER_ERROR;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ['message' => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -161,5 +161,34 @@ class CustomerController extends Controller
         $customer = Customer::find($id);
         $result = $customer->sendNotification($request->title, $request->message);
         return response()->json($result);
+    }
+
+    public function changePassword(Request $request) {
+        $customer = Auth::guard('customer')->user();
+        if(isset($customer)) {
+            if (isset($request->old_password) && isset($request->new_password)) {
+                $result = $customer->changePassword($request->old_password, $request->new_password);
+                $customer->removeApiToken();
+                $customer->removeDeviceId();
+                if($result) {
+                    $message = ['message' => 'Ok'];
+                    $code = HttpResponseCode::OK;
+                }
+                else {
+                    $message = ['message' => 'Error'];
+                    $code = HttpResponseCode::BAD_REQUEST;
+                }
+            }
+            else {
+                $message = ['message' => 'Data not provided'];
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else {
+            $message = ['message' => 'User not recognized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
     }
 }

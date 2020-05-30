@@ -45,6 +45,7 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::get(CUSTOMER.'/{id}', 'CustomerController@readCurrent');
     Route::put(CUSTOMER, 'CustomerController@update');
     Route::delete(CUSTOMER, 'CustomerController@delete');
+    Route::post(CUSTOMER.'/changePassword', 'CustomerController@changePassword');
 
     Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
     Route::get(CUSTOMER.ORDER, 'OrderController@readCustomerOrders');
