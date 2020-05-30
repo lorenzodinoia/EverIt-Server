@@ -12,6 +12,8 @@ class Order extends Model
     protected $casts = [
         'estimated_delivery_time'  => 'datetime:Y-m-d H:i',
         'actual_delivery_time' => 'datetime:Y-m-d H:i',
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
     ];
 
     /**
