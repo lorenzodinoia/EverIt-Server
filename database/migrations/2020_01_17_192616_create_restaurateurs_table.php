@@ -28,15 +28,13 @@ class CreateRestaurateursTable extends Migration
             $table->integer('min_price')->default(1)->unsigned();
             $table->string('image_path')->nullable();
             $table->unsignedBigInteger('shop_type_id');
-            $table->unsignedBigInteger('city_id');
             $table->string('device_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('shop_type_id')->references('id')->on('shop_types')->onDelete('cascade');
-            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
 
-            $table->unique(['shop_name', 'city_id']);
+            $table->unique(['shop_name']);
         });
     }
 

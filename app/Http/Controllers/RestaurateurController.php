@@ -41,13 +41,6 @@ class RestaurateurController extends Controller
             if(isset($request->min_price)) {
                 $cretedRestaurateur->min_price = $request->min_price;
             }
-            $city = City::find($request->city_id);
-            if(isset($city)) {
-                $cretedRestaurateur->city()->associate($city);
-            }
-            else {
-                return response()->json(['message' => 'Unable to attach city'], HttpResponseCode::BAD_REQUEST);
-            }
             $shopType = ShopType::find($request->shop_type_id);
             if(isset($shopType)) {
                 $cretedRestaurateur->shopType()->associate($shopType);
@@ -68,7 +61,7 @@ class RestaurateurController extends Controller
      * Get details for a given restaurateur
      */
     public function read($id) {
-        $restaurateur = Restaurateur::with(['openingTimes', 'productCategories'])->find($id);
+        $restaurateur = Restaurateur::with(['openingTimes', 'productCategories', 'feedbacks'])->find($id);
         if(isset($restaurateur)){
             $message = $restaurateur;
             $code = HttpResponseCode::OK;
@@ -122,13 +115,6 @@ class RestaurateurController extends Controller
                 $restaurateur->delivery_cost = $newData->delivery_cost;
                 if(isset($newData->min_price)) {
                     $restaurateur->min_price = $newData->min_price;
-                }
-                $city = City::find($newData->city_id);
-                if(isset($city)) {
-                    $restaurateur->city()->associate($city);
-                }
-                else {
-                    return response()->json(['message' => 'Unable to attach city'], HttpResponseCode::BAD_REQUEST);
                 }
                 $shopType = ShopType::find($newData->shop_type_id);
                 if(isset($shopType)) {

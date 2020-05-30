@@ -16,8 +16,12 @@ class Restaurateur extends Authenticatable
 {
     protected $guarded = ['password', 'remember_token', 'image_path', 'device_id'];
     protected $hidden = ['remember_token', 'password', 'device_id'];
-    protected $with = ['city', 'shopType'];
+    protected $with = ['shopType'];
     protected $appends = ['is_open'];
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
+    ];
 
     /**
      * Password field setter
@@ -25,13 +29,6 @@ class Restaurateur extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
-    }
-
-    /**
-     * Define the inverse one (city) to many (restaurateurs) relationship
-     */
-    public function city() {
-        return $this->belongsTo('App\City');
     }
 
     /**
@@ -122,8 +119,7 @@ class Restaurateur extends Authenticatable
             'description' => 'string',
             'delivery_cost' => 'required|numeric',
             'min_price' => 'numeric',
-            'shop_type_id' => 'required|integer',
-            'city_id' => 'required|integer'
+            'shop_type_id' => 'required|integer'
         ];
 
         $message = [
