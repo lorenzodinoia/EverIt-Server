@@ -22,7 +22,7 @@ const PRODUCT_CATEGORY = '/productCategory';
 const SHOP_TYPE = '/shopType';
 const PRODUCT = "/product";
 const OPENING_TIMES = "/openingTimes";
-const FEEDBACK = "/feedback";
+const REVIEW = "/review";
 const PROPOSAL = "/proposal";
 
 Route::get('echo', function () {
@@ -51,14 +51,14 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::get(CUSTOMER.ORDER.'/getAll', 'OrderController@readCustomerOrders');
     Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@readAsCustomer');
 
-    Route::post(RESTAURATEUR.'/{idRestaurateur}'.FEEDBACK, 'FeedbackController@create');
-    Route::get(CUSTOMER.FEEDBACK.'/all', 'FeedbackController@readCustomerFeedback');
-    Route::put(CUSTOMER.FEEDBACK.'/{id}', 'FeedbackController@update');
-    Route::delete(CUSTOMER.FEEDBACK.'/{id}', 'FeedbackController@delete');
+    Route::post(RESTAURATEUR.'/{idRestaurateur}'.REVIEW, 'ReviewController@create');
+    Route::get(CUSTOMER.REVIEW.'/all', 'ReviewController@readCustomerReviews');
+    Route::put(CUSTOMER.REVIEW.'/{id}', 'ReviewController@update');
+    Route::delete(CUSTOMER.REVIEW.'/{id}', 'ReviewController@delete');
     /*
-    Route::put(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@update');
-    Route::delete(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@delete');
-    Route::get(RESTAURATEUR.FEEDBACK.'/getAll', 'FeedbackController@showAllCustomerFeedback');
+    Route::put(RESTAURATEUR.FEEDBACK.'/{id}', 'ReviewController@update');
+    Route::delete(RESTAURATEUR.FEEDBACK.'/{id}', 'ReviewController@delete');
+    Route::get(RESTAURATEUR.FEEDBACK.'/getAll', 'ReviewController@showAllCustomerFeedback');
     */
 });
 
@@ -106,7 +106,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 
-    Route::get(RESTAURATEUR.FEEDBACK.'/all', 'FeedbackController@readRestaurateurFeedback');
+    Route::get(RESTAURATEUR.REVIEW.'/all', 'ReviewController@readRestaurateurReviews');
 });
 
 /*

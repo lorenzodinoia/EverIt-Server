@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRestaurateurFeedbackTable extends Migration
+class CreateReviewsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRestaurateurFeedbackTable extends Migration
      */
     public function up()
     {
-        Schema::create('restaurateur_feedback', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('restaurateur_id');
@@ -32,6 +32,6 @@ class CreateRestaurateurFeedbackTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restaurateur_feedback');
+        Schema::dropIfExists('reviews');
     }
 }

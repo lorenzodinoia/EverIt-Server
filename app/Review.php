@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class Feedback extends Model
+class Review extends Model
 {
-
-    protected $table = 'restaurateur_feedback';
     public $timestamps = false;
 
     public function restaurateur() {

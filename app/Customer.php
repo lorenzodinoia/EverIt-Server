@@ -23,12 +23,11 @@ class Customer extends Authenticatable
     }
 
     /**
-     * Define the many (customers) to many (restaurateurs) relationship for feedbacks
+     * Define the many (customers) to many (restaurateurs) relationship for reviews
      */
-    public function feedbacks()
+    public function reviews()
     {
-        return $this->hasMany('App\Feedback')->with("restaurateur");
-        //return $this->belongsToMany('App\Restaurateur', 'restaurateur_feedback')->withPivot('vote');
+        return $this->hasMany('App\Review')->with("restaurateur");
     }
 
     /**
@@ -39,7 +38,7 @@ class Customer extends Authenticatable
     }
 
     public function restaurateur(){
-        return $this->hasManyThrough('App\Restaurateur', 'App\Feedback');
+        return $this->hasManyThrough('App\Restaurateur', 'App\Review');
     }
 
     /**

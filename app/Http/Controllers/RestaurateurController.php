@@ -61,7 +61,7 @@ class RestaurateurController extends Controller
      * Get details for a given restaurateur
      */
     public function read($id) {
-        $restaurateur = Restaurateur::with(['openingTimes', 'productCategories', 'feedbacks'])->find($id);
+        $restaurateur = Restaurateur::with(['openingTimes', 'productCategories'])->find($id);
         if(isset($restaurateur)){
             $message = $restaurateur;
             $code = HttpResponseCode::OK;

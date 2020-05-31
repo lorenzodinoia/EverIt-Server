@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Feedback;
+use App\Review;
 use App\HttpResponseCode;
 use App\Restaurateur;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FeedbackController extends Controller
+class ReviewController extends Controller
 {
     public function create(Request $request, $idRestaurateur){
         $customer = Auth::guard('customer')->user();
         if(isset($customer)){
-            $feedback = $customer->feedbacks()->where('restaurateur_id', '=', $idRestaurateur)->first();
+            $feedback = $customer->reviews()->where('restaurateur_id', '=', $idRestaurateur)->first();
             if(!isset($feedback)){
-                $validator = Feedback::checkCreateRequest($request);
+                $validator = Review::checkCreateRequest($request);
                 if(!$validator->fails()) {
-                    $newFeedback = new Feedback();
+                    $newFeedback = new Review();
                     $newFeedback->vote = $request->vote;
                     $newFeedback->text = $request->text;
                     $newFeedback->restaurateur()->associate($idRestaurateur);
@@ -48,10 +48,10 @@ class FeedbackController extends Controller
     public function update(Request $request, $id){
         $customer = Auth::guard('customer')->user();
         if(isset($customer)){
-            $feedback = Feedback::find($id);
+            $feedback = Review::find($id);
             if(isset($feedback)){
                 if($feedback->customer_id == $customer->id){
-                    $validator = Feedback::checkCreateRequest($request);
+                    $validator = Review::checkCreateRequest($request);
                     if(!$validator->fails()){
                         $feedback->vote = $request->vote;
                         $feedback->text = $request->text;
@@ -85,7 +85,7 @@ class FeedbackController extends Controller
     public function delete($id){
         $customer = Auth::guard('customer')->user();
         if(isset($customer)){
-            $feedback = $customer->feedbacks()->where('restaurateur_feedback.id', $id)->get();
+            $feedback = $customer->reviews()->where('restaurateur_feedback.id', $id)->get();
             if(isset($feedback[0])){
                 $deleted = $feedback[0]->delete();
                 if($deleted){
@@ -110,10 +110,10 @@ class FeedbackController extends Controller
         return response()->json($message, $code);
     }
 
-    public function readRestaurateurFeedback() {
+    public function readRestaurateurReviews() {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
-            $message = $restaurateur->feedbacks()->get();
+            $message = $restaurateur->reviews()->get();
             $code = HttpResponseCode::OK;
         }
         else {
@@ -124,10 +124,10 @@ class FeedbackController extends Controller
         return response()->json($message, $code);
     }
 
-    public function readCustomerFeedback() {
+    public function readCustomerReviews() {
         $customer = Auth::guard('customer')->user();
         if(isset($customer)) {
-            $message = $customer->feedbacks()->get();
+            $message = $customer->reviews()->get();
             $code = HttpResponseCode::OK;
         }
         else {

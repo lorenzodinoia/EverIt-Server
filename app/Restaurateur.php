@@ -39,11 +39,11 @@ class Restaurateur extends Authenticatable
     }
 
     /**
-     * Define the many (restaurateurs) to many (customers) relationship for feedbacks
+     * Define the many (restaurateurs) to many (customers) relationship for reviews
      */
-    public function feedbacks()
+    public function reviews()
     {
-        return $this->hasMany('App\Feedback');
+        return $this->hasMany('App\Review')->with('customer');
     }
 
     /**
