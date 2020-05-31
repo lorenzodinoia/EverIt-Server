@@ -110,29 +110,27 @@ class FeedbackController extends Controller
         return response()->json($message, $code);
     }
 
-    public function showAllFeedbackRestaurateur($id){
+    public function readRestaurateurFeedback() {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
-            $feedback = $restaurateur->feedbacks()->get();
-            $message = $feedback;
+            $message = $restaurateur->feedbacks()->get();
             $code = HttpResponseCode::OK;
         }
-        else{
-            $message = "Unauthorized";
+        else {
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
         return response()->json($message, $code);
     }
 
-    public function showAllCustomerFeedback(){
+    public function readCustomerFeedback() {
         $customer = Auth::guard('customer')->user();
-        if(isset($customer)){
-            $feedback = $customer->feedbacks()->get();
-            $message = $feedback;
+        if(isset($customer)) {
+            $message = $customer->feedbacks()->get();
             $code = HttpResponseCode::OK;
         }
-        else{
+        else {
             $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }

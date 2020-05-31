@@ -52,9 +52,14 @@ Route::middleware(['auth:customer'])->group(function () {
     Route::get(CUSTOMER.ORDER.'/{id}', 'OrderController@readAsCustomer');
 
     Route::post(RESTAURATEUR.'/{idRestaurateur}'.FEEDBACK, 'FeedbackController@create');
+    Route::get(CUSTOMER.FEEDBACK.'/all', 'FeedbackController@readCustomerFeedback');
+    Route::put(CUSTOMER.FEEDBACK.'/{id}', 'FeedbackController@update');
+    Route::delete(CUSTOMER.FEEDBACK.'/{id}', 'FeedbackController@delete');
+    /*
     Route::put(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@update');
     Route::delete(RESTAURATEUR.FEEDBACK.'/{id}', 'FeedbackController@delete');
     Route::get(RESTAURATEUR.FEEDBACK.'/getAll', 'FeedbackController@showAllCustomerFeedback');
+    */
 });
 
 /*
@@ -101,8 +106,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 
-    Route::get(RESTAURATEUR.'/{id}'.FEEDBACK.'/all', 'FeedbackController@showAllFeedbackRestaurateur');
-
+    Route::get(RESTAURATEUR.FEEDBACK.'/all', 'FeedbackController@readRestaurateurFeedback');
 });
 
 /*

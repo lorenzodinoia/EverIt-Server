@@ -43,7 +43,7 @@ class Restaurateur extends Authenticatable
      */
     public function feedbacks()
     {
-        return $this->belongsToMany('App\Customer', 'restaurateur_feedback')->withPivot('vote');
+        return $this->hasMany('App\Feedback');
     }
 
     /**
