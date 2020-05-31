@@ -51,11 +51,11 @@ class ImageController extends Controller
             $fileName = $this->saveImage($request);
             $restaurateur->image_path = $fileName;
             $restaurateur->save();
-            $message = "Saved";
+            $message = ["message" => "Saved"];
             $code = HttpResponseCode::OK;
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -70,7 +70,7 @@ class ImageController extends Controller
             $restaurateur->save();
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
             return response()->json($message, $code);
         }

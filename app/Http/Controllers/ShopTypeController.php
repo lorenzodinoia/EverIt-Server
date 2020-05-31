@@ -18,7 +18,7 @@ class ShopTypeController extends Controller
             $code = HttpResponseCode::OK;
         }
         else{
-            $message = "Shop type not found";
+            $message = ["message" => "Shop type not found"];
             $code = HttpResponseCode::NOT_FOUND;
         }
 

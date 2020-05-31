@@ -114,17 +114,17 @@ class ProductController extends Controller
                     }
                 }
                 else{
-                    $message = "Product category doesn't exist";
+                    $message = ["message" => "Product category doesn't exist"];
                     $code = HttpResponseCode::NOT_FOUND;
                 }
             }
             else{
-                $message = "Product doesn't exist";
+                $message = ["message" => "Product doesn't exist"];
                 $code = HttpResponseCode::NOT_FOUND;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -146,16 +146,16 @@ class ProductController extends Controller
                     $message = ["message" => "Product deleted"];
                     $code = HttpResponseCode::OK;
                 } else {
-                    $message = "Can't delete product";
+                    $message = ["message" => "Can't delete product"];
                     $code = HttpResponseCode::SERVER_ERROR;
                 }
             } else {
-                $message = "Product not found";
+                $message = ["message" => "Product not found"];
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

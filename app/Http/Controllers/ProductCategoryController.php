@@ -72,12 +72,12 @@ class ProductCategoryController extends Controller
                 $code = HttpResponseCode::OK;
             }
             else{
-                $message = "Category not found";
+                $message = ["message" => "Category not found"];
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -99,17 +99,17 @@ class ProductCategoryController extends Controller
                     $code = HttpResponseCode::OK;
                 }
                 else{
-                    $message = "Can't delete product category";
+                    $message = ["message" => "Can't delete product category"];
                     $code = HttpResponseCode::SERVER_ERROR;
                 }
             }
             else{
-                $message = "Category not found";
+                $message = ["message" => "Category not found"];
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

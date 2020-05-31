@@ -47,7 +47,7 @@ class CustomerController extends Controller
             $code = HttpResponseCode::OK;
         }
         else {
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -81,7 +81,7 @@ class CustomerController extends Controller
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

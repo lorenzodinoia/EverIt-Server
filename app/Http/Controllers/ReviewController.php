@@ -33,12 +33,12 @@ class ReviewController extends Controller
                 }
             }
             else{
-                $message = "Can't upload more than one feedback per restaurateur";
+                $message = ["message" => "Can't upload more than one feedback per restaurateur"];
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -65,17 +65,17 @@ class ReviewController extends Controller
                     }
                 }
                 else{
-                    $message = "Can't edit others feedback";
+                    $message = ["message" => "Can't edit others feedback"];
                     $code = HttpResponseCode::BAD_REQUEST;
                 }
             }
             else{
-                $message = "Can't find feedback";
+                $message = ["message" => "Can't find feedback"];
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -89,21 +89,21 @@ class ReviewController extends Controller
             if(isset($feedback[0])){
                 $deleted = $feedback[0]->delete();
                 if($deleted){
-                    $message = "Deleted";
+                    $message = ["message" => "Deleted"];
                     $code = HttpResponseCode::OK;
                 }
                 else{
-                    $message = "Can't delete feedback";
+                    $message = ["message" => "Can't delete feedback"];
                     $code = HttpResponseCode::SERVER_ERROR;
                 }
             }
             else{
-                $message = "Can't find feedback";
+                $message = ["message" => "Can't find feedback"];
                 $code = HttpResponseCode::BAD_REQUEST;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

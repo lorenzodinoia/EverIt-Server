@@ -67,7 +67,7 @@ class RestaurateurController extends Controller
             $code = HttpResponseCode::OK;
         }
         else{
-            $message = "Can't find commercial activity";
+            $message = ["message" => "Can't find commercial activity"];
             $code = HttpResponseCode::BAD_REQUEST;
         }
 
@@ -85,7 +85,7 @@ class RestaurateurController extends Controller
             $code = HttpResponseCode::OK;
         }
         else {
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -134,7 +134,7 @@ class RestaurateurController extends Controller
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
@@ -150,16 +150,16 @@ class RestaurateurController extends Controller
         if(isset($restaurateur)){
             $deleted = $restaurateur->delete();
             if($deleted){
-                $message = "Deleted";
+                $message = ["message" => "Deleted"];
                 $code = HttpResponseCode::OK;
             }
             else{
-                $message = "Can't delete customer";
+                $message = ["message" => "Can't delete customer"];
                 $code = HttpResponseCode::SERVER_ERROR;
             }
         }
         else{
-            $message = "Unauthorized";
+            $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 
