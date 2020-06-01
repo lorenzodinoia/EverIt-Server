@@ -110,6 +110,20 @@ class ReviewController extends Controller
         return response()->json($message, $code);
     }
 
+    public function readRestaurateurReviewsById($id) {
+        $restaurateur = Restaurateur::find($id);
+        if(isset($restaurateur)){
+            $message = $restaurateur->reviews()->get();
+            $code = HttpResponseCode::OK;
+        }
+        else {
+            $message = ["message" => "Restaurateur not found"];
+            $code = HttpResponseCode::NOT_FOUND;
+        }
+
+        return response()->json($message, $code);
+    }
+
     public function readRestaurateurReviews() {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
