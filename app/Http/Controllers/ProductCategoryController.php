@@ -90,7 +90,8 @@ class ProductCategoryController extends Controller
     public function delete(Request $request, $id) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
-            $category = $restaurateur->productCategories()->where("id", $id)->first()->get();
+            $category = $restaurateur->productCategories()->where("id", $id)->get();
+            //return response()->json($category, 200);
             if(isset($category[0])){
                 $categoryTarget = $category[0];
                 $deleted = $categoryTarget->delete();
