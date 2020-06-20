@@ -116,6 +116,7 @@ class Restaurateur extends Authenticatable
             'email' => 'required|email',
             'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
             'vat_number' => 'required|string|between:1,11',
+            'max_delivery_time_slot' => 'required|numeric',
             'delivery_cost' => 'required|numeric',
             'min_price' => 'numeric',
             'shop_type_id' => 'required|integer',
