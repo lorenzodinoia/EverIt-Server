@@ -203,6 +203,25 @@ class OrderController extends Controller
         return response()->json($message, $code);
     }
 
+    /**
+     * Get the list of in progress orders for the current logged in restaurateur
+     * The restaurateur must be logged in
+     */
+    public function readRestaurateurToDoOrders() {
+        $restaurateur = Auth::guard("restaurateur")->user();
+
+        if(isset($restaurateur)) {
+            $message = $restaurateur->toDoOrders()->with(OrderController::RESTAURATEUR_ORDER_RELATIONSHIP)->orderBy('estimated_delivery_time', 'asc')->get();
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = ['message' => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
      /**
      * Get the list of in progress orders for the current logged in restaurateur
       * The restaurateur must be logged in
