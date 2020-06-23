@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\OpeningTime;
 use App\Proposal;
 use App\Restaurateur;
 use App\City;
@@ -32,6 +33,7 @@ class RestaurateurController extends Controller
             $cretedRestaurateur->email = $request->email;
             $cretedRestaurateur->password = $request->password;
             $cretedRestaurateur->vat_number = $request->vat_number;
+            $cretedRestaurateur->max_delivery_time_slot = $request->max_delivery_time_slot;
             if(isset($request->description)) {
                 $cretedRestaurateur->description = $request->description;
             }
@@ -50,6 +52,10 @@ class RestaurateurController extends Controller
             }
 
             $cretedRestaurateur->save();
+
+            $this->saveOpeningTimes($request->input('opening_times'), $cretedRestaurateur);
+
+
             return response()->json(Restaurateur::find($cretedRestaurateur->id), HttpResponseCode::OK);
         }
         else {
@@ -268,5 +274,17 @@ class RestaurateurController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    private function saveOpeningTimes($openingDays, $restaurateur){
+        foreach ($openingDays as $day) {
+            foreach ($day['opening_times'] as $time) {
+                $openingTimeSave = new OpeningTime;
+                $openingTimeSave->opening_time = $time['opening_time'];
+                $openingTimeSave->closing_time = $time['closing_time'];
+                $openingTimeSave->opening_day_id = $day['id'];
+                $restaurateur->openingTimes()->save($openingTimeSave);
+            }
+        }
     }
 }

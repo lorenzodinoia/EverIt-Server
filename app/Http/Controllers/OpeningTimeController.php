@@ -76,4 +76,5 @@ class OpeningTimeController extends Controller
 
         return response()->json($message, $code);
     }
+    
 }

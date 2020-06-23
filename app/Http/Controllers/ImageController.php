@@ -17,9 +17,12 @@ class ImageController extends Controller
      */
     public function saveImage(Request $request){
 
-        $extension = $request->image->getClientOriginalExtension();
+        $file= $request->File("image");
+        $fileName = time().'_'.rand(1, 100000).'.'.$request->image->getClientOriginalExtension();
+        $file->storeAs("images", $fileName);
+        /*$extension = $request->image->getClientOriginalExtension();
         $fileName = time().'_'.rand(1, 100000).'.'.$extension;
-        $path = $request->file('image')->move(public_path("/"), $fileName);
+        $path = $request->file('image')->move(public_path("/"), $fileName);*/
 
         return $fileName;
     }
@@ -46,6 +49,7 @@ class ImageController extends Controller
     }
 
     public function saveImageRestaurateur(Request $request){
+
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {
             $fileName = $this->saveImage($request);

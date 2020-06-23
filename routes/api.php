@@ -81,6 +81,9 @@ Route::get(RESTAURATEUR.'/{id}'.ORDER.'/availableTimes', 'OrderController@getAva
 Route::get(RESTAURATEUR.'/searchNearby/{latitude}/{longitude}', 'RestaurateurController@searchNearby');
 
 Route::get(RESTAURATEUR.'/{id}'.REVIEW.'/all', 'ReviewController@readRestaurateurReviewsById');
+
+Route::get(RESTAURATEUR.'/{idRestaurateur}'.OPENING_TIMES, 'OpeningTimeController@readAllByRestaurateur');
+
 Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
@@ -107,6 +110,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::delete(RESTAURATEUR.PRODUCT_CATEGORY.PRODUCT.'/{id}', 'ProductController@delete');
 
     Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
+    Route::post(RESTAURATEUR.OPENING_TIMES.'/addAll', 'OpeningTimeController@createAll');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 
     Route::get(RESTAURATEUR.REVIEW.'/all', 'ReviewController@readRestaurateurReviews');

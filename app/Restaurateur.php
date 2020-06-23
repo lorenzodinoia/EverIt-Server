@@ -120,10 +120,12 @@ class Restaurateur extends Authenticatable
             'email' => 'required|email',
             'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
             'vat_number' => 'required|string|between:1,11',
-            'description' => 'string',
+            'max_delivery_time_slot' => 'required|numeric',
             'delivery_cost' => 'required|numeric',
             'min_price' => 'numeric',
-            'shop_type_id' => 'required|integer'
+            'shop_type_id' => 'required|integer',
+            'opening_times' => 'required',
+            'opening_times.*.id' => 'required'
         ];
 
         $message = [
@@ -133,7 +135,8 @@ class Restaurateur extends Authenticatable
             'email' => ':attribute must respect email standard',
             'numeric' => ':attribute must be numeric',
             'integer' => ':attribute must be integer',
-            'regex' => ':attribute must respect format'
+            'regex' => ':attribute must respect format',
+            'date_format' => ':attribute must respect time format (H:i)',
         ];
 
         return Validator::make($request->all(), $rules, $message);
