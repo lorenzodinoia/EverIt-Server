@@ -427,4 +427,50 @@ class OrderController extends Controller
             $customer->sendNotification("Ordine in consegna", $notificationMessage);
         }
     }
+
+    public function markAsConfirmed($idOrder){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
+            if(isset($order[0])){
+                $order[0]->status = 1;
+                $order[0]->save();
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function markAsLate($idOrder){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
+            if(isset($order[0])){
+                $order[0]->late = true;
+                $order[0]->save();
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }
