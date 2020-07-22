@@ -15,11 +15,11 @@ class OpeningTimeController extends Controller
      * Create new opening time for a restaurateur
      * Restaurateur must be logged in
      */
-    public function create(Request $request) {
-        if(isset($request->opening_time) && isset($request->closing_time) && isset($request->day)) {
+    public function create(Request $request, $idDay) {
+        if(isset($request->opening_time) && isset($request->closing_time)) {
             $restaurateur = Auth::guard('restaurateur')->user();
             if(isset($restaurateur)) {
-                $day = OpeningDay::find($request->day);
+                $day = OpeningDay::find($idDay);
                 if(isset($day)) {
                     $openingTime = new OpeningTime;
                     $openingTime->opening_time = $request->opening_time;
@@ -28,7 +28,7 @@ class OpeningTimeController extends Controller
                     $openingTime->openingDay()->associate($day);
                     $openingTime->save();
 
-                    $message = ['message' => 'Created'];
+                    $message = $openingTime;
                     $code = HttpResponseCode::CREATED;
                 }
                 else {
@@ -54,7 +54,7 @@ class OpeningTimeController extends Controller
      * Delete an opening time of a restaurateur
      * Restaurateur must be logged in
      */
-    public function delete(Request $request, $openingTimeId) {
+    public function delete($openingTimeId) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {
             $openingTime = $restaurateur->openingTimes()->where('id', $openingTimeId)->first()->get();
@@ -76,5 +76,5 @@ class OpeningTimeController extends Controller
 
         return response()->json($message, $code);
     }
-    
+
 }

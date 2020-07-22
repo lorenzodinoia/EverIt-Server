@@ -21,6 +21,7 @@ const CITY = '/city';
 const PRODUCT_CATEGORY = '/productCategory';
 const SHOP_TYPE = '/shopType';
 const PRODUCT = "/product";
+const OPENING_DAYS = "/openingDay";
 const OPENING_TIMES = "/openingTimes";
 const REVIEW = "/review";
 const PROPOSAL = "/proposal";
@@ -85,6 +86,7 @@ Route::get(RESTAURATEUR.'/{id}'.REVIEW.'/all', 'ReviewController@readRestaurateu
 Route::get(RESTAURATEUR.'/{idRestaurateur}'.OPENING_TIMES, 'OpeningTimeController@readAllByRestaurateur');
 
 Route::middleware(['auth:restaurateur'])->group(function () {
+    Route::get(RESTAURATEUR.'/read'.'/current', 'RestaurateurCOntroller@getCurrentRestaurateur');
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
     Route::put(RESTAURATEUR.'/update', 'RestaurateurController@update');
@@ -98,8 +100,11 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::get(RESTAURATEUR.ORDER.'/pending', 'OrderController@readRestaurateurPendingOrders');
     Route::get(RESTAURATEUR.ORDER.'/toDo', 'OrderController@readRestaurateurToDoOrders');
     Route::get(RESTAURATEUR.ORDER.'/delivered', 'OrderController@readRestaurateurDeliveredOrders');
+    Route::get(RESTAURATEUR.ORDER.'/done', 'OrderController@readRestaurateurDeliveredOrders');
     Route::get(RESTAURATEUR.ORDER.'/{id}', 'OrderController@readAsRestaurateur');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/searchRider', 'RestaurateurController@searchRider');
+    Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsConfirmed', 'OrderController@markAsConfirmed');
+    Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsLate', 'OrderController@markAsLate');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
     Route::put(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@update');
@@ -109,8 +114,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::put(RESTAURATEUR.PRODUCT_CATEGORY.PRODUCT.'/{id}', 'ProductController@update');
     Route::delete(RESTAURATEUR.PRODUCT_CATEGORY.PRODUCT.'/{id}', 'ProductController@delete');
 
-    Route::post(RESTAURATEUR.OPENING_TIMES, 'OpeningTimeController@create');
-    Route::post(RESTAURATEUR.OPENING_TIMES.'/addAll', 'OpeningTimeController@createAll');
+    Route::post(RESTAURATEUR.OPENING_DAYS.'/{idDay}'.OPENING_TIMES, 'OpeningTimeController@create');
+    //Route::post(RESTAURATEUR.OPENING_TIMES.'/addAll', 'OpeningTimeController@createAll');
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 
     Route::get(RESTAURATEUR.REVIEW.'/all', 'ReviewController@readRestaurateurReviews');
