@@ -7,13 +7,10 @@ use App\Proposal;
 use App\Restaurateur;
 use App\City;
 use App\ShopType;
-use App\ProductCategory;
-use App\Product;
 use App\Rider;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class RestaurateurController extends Controller
 {
@@ -286,5 +283,19 @@ class RestaurateurController extends Controller
                 $restaurateur->openingTimes()->save($openingTimeSave);
             }
         }
+    }
+
+    public function getCurrentRestaurateur(){
+        $restaurateurGuard = Auth::guard('restaurateur')->user();
+        $restaurateur = Restaurateur::with(['openingTimes'])->find($restaurateurGuard->id);
+        if(isset($restaurateur)){
+            $message = $restaurateur;
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = ["message" => "User not found"];
+            $code = HttpResponseCode::NOT_FOUND;
+        }
+        return response()->json($message, $code);
     }
 }
