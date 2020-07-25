@@ -77,7 +77,7 @@ Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY.PRODUCT, 'ProductController@rea
 Route::get(RESTAURATEUR.PRODUCT_CATEGORY.'/{categoryId}'.PRODUCT, 'ProductController@readAllByCategory');
 
 Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
-Route::get(RESTAURATEUR.'/{id}'.ORDER.'/availableTimes', 'OrderController@getAvailableDeliveryTime');
+Route::get(RESTAURATEUR.'/{restaurateurId}'.ORDER.'/availableTimes', 'OrderController@getAvailableDeliveryTime');
 
 Route::get(RESTAURATEUR.'/searchNearby/{latitude}/{longitude}', 'RestaurateurController@searchNearby');
 
