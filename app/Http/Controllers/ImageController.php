@@ -19,7 +19,8 @@ class ImageController extends Controller
 
         $file= $request->File("image");
         $fileName = time().'_'.rand(1, 100000).'.'.$request->image->getClientOriginalExtension();
-        $file->storeAs("images", $fileName);
+        $file->move(public_path("/images"), $fileName);
+        //$file->storeAs("images", $fileName);
         /*$extension = $request->image->getClientOriginalExtension();
         $fileName = time().'_'.rand(1, 100000).'.'.$extension;
         $path = $request->file('image')->move(public_path("/"), $fileName);*/

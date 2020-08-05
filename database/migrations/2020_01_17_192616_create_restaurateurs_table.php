@@ -23,7 +23,6 @@ class CreateRestaurateursTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('vat_number', 11);
-            $table->text('description')->nullable();
             $table->integer('max_delivery_time_slot')->unsigned();
             $table->float('delivery_cost', 4, 2)->default(0);
             $table->integer('min_price')->default(1)->unsigned();

@@ -77,7 +77,7 @@ Route::get(RESTAURATEUR.'/{id}'.PRODUCT_CATEGORY.PRODUCT, 'ProductController@rea
 Route::get(RESTAURATEUR.PRODUCT_CATEGORY.'/{categoryId}'.PRODUCT, 'ProductController@readAllByCategory');
 
 Route::post(RESTAURATEUR.'/{id}'.ORDER, 'OrderController@create');
-Route::get(RESTAURATEUR.'/{id}'.ORDER.'/availableTimes', 'OrderController@getAvailableDeliveryTime');
+Route::get(RESTAURATEUR.'/{restaurateurId}'.ORDER.'/availableTimes', 'OrderController@getAvailableDeliveryTime');
 
 Route::get(RESTAURATEUR.'/searchNearby/{latitude}/{longitude}', 'RestaurateurController@searchNearby');
 
@@ -90,6 +90,9 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');
     Route::get(RESTAURATEUR, 'RestaurateurController@readCurrent');
     Route::put(RESTAURATEUR.'/update', 'RestaurateurController@update');
+    Route::put(RESTAURATEUR.'/update'.'/shopName', 'RestaurateurController@setNewShopName');
+    Route::put(RESTAURATEUR.'/update'.'/email', 'RestaurateurController@setNewEmail');
+    Route::put(RESTAURATEUR.'/update'.'/changePassword', 'RestaurateurController@changePassword');
     Route::delete(RESTAURATEUR.'/delete', 'RestaurateurController@delete');
     Route::post(RESTAURATEUR.'/addProducts', 'RestaurateurController@addProducts');
     Route::get(RESTAURATEUR.'/current/productCategories', 'RestaurateurController@readProductCategories');

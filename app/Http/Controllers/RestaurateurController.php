@@ -8,6 +8,7 @@ use App\Restaurateur;
 use App\City;
 use App\ShopType;
 use App\Rider;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
@@ -31,9 +32,6 @@ class RestaurateurController extends Controller
             $cretedRestaurateur->password = $request->password;
             $cretedRestaurateur->vat_number = $request->vat_number;
             $cretedRestaurateur->max_delivery_time_slot = $request->max_delivery_time_slot;
-            if(isset($request->description)) {
-                $cretedRestaurateur->description = $request->description;
-            }
             if(isset($request->delivery_cost)) {
                 $cretedRestaurateur->delivery_cost = $request->delivery_cost;
             }
@@ -112,9 +110,6 @@ class RestaurateurController extends Controller
                     $restaurateur->password = $newData->password;
                 }
                 $restaurateur->vat_number = $newData->vat_number;
-                if(isset($newData->description)){
-                    $restaurateur->description = $newData->description;
-                }
                 $restaurateur->delivery_cost = $newData->delivery_cost;
                 if(isset($newData->min_price)) {
                     $restaurateur->min_price = $newData->min_price;
@@ -133,7 +128,7 @@ class RestaurateurController extends Controller
             }
             else{
                 $message = $validator->errors();
-                $code = HttpResponseCode::BAD_REQUEST;
+                $code = HttpResponseCode::NOT_FOUND;
             }
         }
         else{
@@ -296,6 +291,81 @@ class RestaurateurController extends Controller
             $message = ["message" => "User not found"];
             $code = HttpResponseCode::NOT_FOUND;
         }
+        return response()->json($message, $code);
+    }
+
+    public function setNewShopName(Request $request){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $validator = Restaurateur::checkUpdateShopName($request);
+            if(!$validator->fails()){
+                $restaurateur->shop_name = $request->shop_name;
+                $restaurateur->save();
+                $message = $restaurateur;
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = $validator->errors();
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function setNewEmail(Request $request){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $validator = Restaurateur::checkUpdateEmail($request);
+            if(!$validator->fails()){
+                $restaurateur->email = $request->email;
+                $restaurateur->save();
+                $message = $restaurateur;
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = $validator->errors();
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function changePassword(Request $request){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            if(isset($request->old_password) && isset($request->new_password)){
+                $result = $restaurateur->changePassword($request->old_password, $request->new_password);
+                $restaurateur->removeApiToken();
+                $restaurateur->removeDeviceId();
+                if($result) {
+                    $message = ['message' => 'Ok'];
+                    $code = HttpResponseCode::OK;
+                }
+                else {
+                    $message = ['message' => 'Error'];
+                    $code = HttpResponseCode::BAD_REQUEST;
+                }
+            }
+            else{
+                $message = ['message' => 'Data not provided'];
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else{
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
         return response()->json($message, $code);
     }
 }
