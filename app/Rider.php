@@ -34,6 +34,10 @@ class Rider extends Authenticatable
         return $this->hasMany('App\Order');
     }
 
+    public function proposals() {
+        return $this->hasMany('App\Proposal');
+    }
+
     /**
      * Check if the request is well formatted using the method of Customer model because they have the same structure
      */

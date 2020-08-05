@@ -7,9 +7,25 @@ use App\Order;
 use App\Proposal;
 use App\Restaurateur;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class ProposalController extends Controller
 {
+    public function read() {
+        $rider = Auth::guard('rider')->user();
+
+        if(isset($rider)) {
+            $message = $rider->proposals()->get();
+            $code = HttpResponseCode::OK;
+        }
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
     public function acceptProposal($id){
         $rider = Auth::guard('rider')->user();
         if(isset($rider)){
