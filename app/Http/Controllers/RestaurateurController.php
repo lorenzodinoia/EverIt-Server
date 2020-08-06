@@ -69,7 +69,7 @@ class RestaurateurController extends Controller
         }
         else{
             $message = ["message" => "Can't find commercial activity"];
-            $code = HttpResponseCode::BAD_REQUEST;
+            $code = HttpResponseCode::NOT_FOUND;
         }
 
         return response()->json($message, $code);
