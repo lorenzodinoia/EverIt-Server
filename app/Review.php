@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Validator;
 class Review extends Model
 {
     public $timestamps = false;
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
+    ];
 
     public function restaurateur() {
         return $this->belongsTo('App\Restaurateur');

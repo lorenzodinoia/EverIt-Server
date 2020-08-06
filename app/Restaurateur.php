@@ -146,15 +146,16 @@ class Restaurateur extends Authenticatable
         $rules = [
             'shop_name' => 'required|string',
             'address' => 'required|string',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
             'password' => 'string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
             'vat_number' => 'required|string|between:1,11',
-            'description' => 'string',
+            'max_delivery_time_slot' => 'required|numeric',
             'delivery_cost' => 'required|numeric',
             'min_price' => 'numeric',
             'shop_type_id' => 'required|integer',
-            'city_id' => 'required|integer'
         ];
 
         $message = [
@@ -169,6 +170,33 @@ class Restaurateur extends Authenticatable
 
         return Validator::make($request->all(), $rules, $message);
     }
+
+    public static function checkUpdateShopName(Request $request){
+        $rules = [
+          'shop_name' => 'required|string'
+        ];
+
+        $message = [
+            'required' => ':attribute required',
+            'string' => ':attribute must be string'
+        ];
+
+        return Validator::make($request->all(), $rules, $message);
+    }
+
+    public static function checkUpdateEmail(Request $request){
+        $rules = [
+            'email' => 'required|email'
+        ];
+
+        $message = [
+            'required' => ':attribute required',
+            'email' => ':attribute must respect email standard'
+        ];
+
+        return Validator::make($request->all(), $rules, $message);
+    }
+
     /**
      * Set the remember_token
      */
@@ -245,5 +273,16 @@ class Restaurateur extends Authenticatable
         }
 
         return $result;
+    }
+
+    public function changePassword($oldPassword, $newPassword) {
+        if(Hash::check($oldPassword, $this->makeVisible('password')->password)) {
+            $this->password = $newPassword;
+            $this->makeHidden('password');
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
