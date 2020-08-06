@@ -18,6 +18,7 @@ class CreateTableProposals extends Migration
             $table->unsignedBigInteger('rider_id');
             $table->unsignedBigInteger('restaurateur_id');
             $table->unsignedBigInteger('order_id');
+            $table->time('pickup_time');
             $table->timestamps();
 
             $table->foreign('rider_id')->references('id')->on('riders')->onDelete('restrict');

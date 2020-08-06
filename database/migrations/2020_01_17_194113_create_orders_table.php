@@ -25,6 +25,7 @@ class CreateOrdersTable extends Migration
             $table->double('longitude');
             $table->double('latitude');
             $table->boolean('late')->default(0);
+            $table->time('pickup_time')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('rider_id')->nullable();
             $table->unsignedBigInteger('restaurateur_id');

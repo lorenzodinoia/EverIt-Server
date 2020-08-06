@@ -143,7 +143,8 @@ Route::middleware(['auth:rider'])->group(function () {
     Route::get(RIDER.ORDER.'/{id}', 'OrderController@readAsRider');
     Route::post(RIDER.ORDER.'/{id}/confirmLocation', 'OrderController@confirmRiderInRestaurant');
 
-    Route::get(RIDER.PROPOSAL.'/all', 'ProposalController@read');
+    Route::get(RIDER.PROPOSAL.'/get/all', 'ProposalController@all');
+    Route::get(RIDER.PROPOSAL.'/{id}', 'ProposalController@read');
     Route::post(RIDER.PROPOSAL.'/{id}/accept', 'ProposalController@acceptProposal');
     Route::post(RIDER.PROPOSAL.'/{id}/refuse', 'ProposalController@refuseProposal');
 });
