@@ -20,7 +20,7 @@ class CreateRestaurateursTable extends Migration
             $table->double('longitude');
             $table->double('latitude');
             $table->string('phone_number', 15);
-            $table->string('email')->unique();
+            $table->string('email', 50)->unique();
             $table->string('password');
             $table->string('vat_number', 11);
             $table->integer('max_delivery_time_slot')->unsigned();
@@ -33,8 +33,6 @@ class CreateRestaurateursTable extends Migration
             $table->timestamps();
 
             $table->foreign('shop_type_id')->references('id')->on('shop_types')->onDelete('cascade');
-
-            $table->unique(['shop_name']);
         });
     }
 
