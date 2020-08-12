@@ -85,7 +85,7 @@ class ReviewController extends Controller
     public function delete($id){
         $customer = Auth::guard('customer')->user();
         if(isset($customer)){
-            $feedback = $customer->reviews()->where('restaurateur_feedback.id', $id)->get();
+            $feedback = $customer->reviews()->where('id', $id)->get();
             if(isset($feedback[0])){
                 $deleted = $feedback[0]->delete();
                 if($deleted){
