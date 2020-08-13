@@ -143,13 +143,17 @@ Route::middleware(['auth:rider'])->group(function () {
     Route::post(RIDER.'/location', 'RiderController@setCurrentLocation');
 
     Route::get(RIDER.ORDER.'/assigned', 'OrderController@readRiderAssignedOrders');
-    Route::get(RIDER.ORDER.'/{id}', 'OrderController@readAsRider');
+    Route::get(RIDER.ORDER.'/assigned/{id}', 'OrderController@readRiderAssignedOrder');
+    //Route::get(RIDER.ORDER.'/{id}', 'OrderController@readAsRider');
     Route::post(RIDER.ORDER.'/{id}/confirmLocation', 'OrderController@confirmRiderInRestaurant');
 
     Route::get(RIDER.PROPOSAL.'/get/all', 'ProposalController@all');
     Route::get(RIDER.PROPOSAL.'/{id}', 'ProposalController@read');
     Route::post(RIDER.PROPOSAL.'/{id}/accept', 'ProposalController@acceptProposal');
     Route::post(RIDER.PROPOSAL.'/{id}/refuse', 'ProposalController@refuseProposal');
+
+    Route::get(RIDER.ORDER.'/deliveries', 'OrderController@readRiderAssignedDeliveries');
+    Route::get(RIDER.ORDER.'/deliveries/{id}', 'OrderController@readRiderAssignedDelivery');
 });
 
 /*

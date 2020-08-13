@@ -58,6 +58,7 @@ class ProposalController extends Controller
                     $order = Order::find($proposal->order_id);
                     $order->rider_id = $rider->id;
                     $order->pickup_time = $proposal->pickup_time;
+                    $order->status = Order::STATUS_IN_PROGRESS;
                     $order->save();
                     $deleted = $order->proposals()->delete();
                     if ($deleted) {
