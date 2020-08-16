@@ -109,7 +109,7 @@ class Restaurateur extends Authenticatable
 
     public function getAvgAttribute(){
         $reviews = $this->reviews()->get();
-        if(isset($reviews)){
+        if((isset($reviews)) && (sizeof($reviews) > 0)){
             $count = 0.0;
             $n = sizeof($reviews);
             foreach($reviews as $review){
