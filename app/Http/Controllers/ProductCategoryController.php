@@ -63,7 +63,7 @@ class ProductCategoryController extends Controller
     public function update(Request $request, $id) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
-            $category = $restaurateur->productCategories()->where("id", $id)->first()->get();
+            $category = $restaurateur->productCategories()->where("id", $id)->get();
             if(isset($category[0])){
                 $newCategory = $category[0];
                 $newCategory->name = $request->name;
