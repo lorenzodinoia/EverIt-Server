@@ -8,6 +8,7 @@ use App\Restaurateur;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use const http\Client\Curl\Features\HTTP2;
 
 class ReviewController extends Controller
 {
@@ -150,5 +151,19 @@ class ReviewController extends Controller
         }
 
         return response()->json($message, $code);
+    }
+
+    public function getAvgRatingRestaurateur($idRestaurateur){
+        $restaurateur = Restaurateur::find($idRestaurateur);
+        if(isset($restaurateur)){
+            $count = 0.0;
+            $reviews = $restaurateur->reviews()->get();
+            $n = sizeof($reviews);
+            foreach($reviews as $review){
+                $count += $review->vote;
+            }
+
+            return round($count/$n);
+        }
     }
 }

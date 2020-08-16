@@ -85,6 +85,8 @@ Route::get(RESTAURATEUR.'/{id}'.REVIEW.'/all', 'ReviewController@readRestaurateu
 
 Route::get(RESTAURATEUR.'/{idRestaurateur}'.OPENING_TIMES, 'OpeningTimeController@readAllByRestaurateur');
 
+Route::get(RESTAURATEUR.'/{idRestaurateur}'.REVIEW.'/avg', 'ReviewController@getAvgRatingRestaurateur');
+
 Route::middleware(['auth:restaurateur'])->group(function () {
     Route::get(RESTAURATEUR.'/read'.'/current', 'RestaurateurCOntroller@getCurrentRestaurateur');
     Route::post(RESTAURATEUR.'/logout', 'RestaurateurController@logout');

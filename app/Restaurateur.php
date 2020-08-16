@@ -17,7 +17,7 @@ class Restaurateur extends Authenticatable
     protected $guarded = ['password', 'remember_token', 'image_path', 'device_id'];
     protected $hidden = ['remember_token', 'password', 'device_id'];
     protected $with = ['shopType'];
-    protected $appends = ['is_open'];
+    protected $appends = ['is_open', 'avg'];
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i',
         'updated_at' => 'datetime:Y-m-d H:i',
@@ -105,6 +105,22 @@ class Restaurateur extends Authenticatable
         }
 
         return false;
+    }
+
+    public function getAvgAttribute(){
+        $reviews = $this->reviews()->get();
+        if(isset($reviews)){
+            $count = 0.0;
+            $n = sizeof($reviews);
+            foreach($reviews as $review){
+                $count += $review->vote;
+            }
+
+            return round($count/$n);
+        }
+        else{
+            return 0;
+        }
     }
 
     /**

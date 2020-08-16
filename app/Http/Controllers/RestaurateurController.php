@@ -8,7 +8,6 @@ use App\Restaurateur;
 use App\City;
 use App\ShopType;
 use App\Rider;
-use Dotenv\Validator;
 use Illuminate\Http\Request;
 use App\HttpResponseCode;
 use Illuminate\Support\Facades\Auth;
