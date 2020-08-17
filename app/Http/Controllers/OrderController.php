@@ -64,6 +64,7 @@ class OrderController extends Controller
                     $order->latitude = $request->latitude;
                     $order->longitude = $request->longitude;
                     $order->status = 0;
+                    $order->late = false;
                     $order->order_type = $request->order_type;
                     $order->customer()->associate($customer->id);
                     $order->restaurateur()->associate($restaurateur);
@@ -93,7 +94,8 @@ class OrderController extends Controller
                 $notificationMessage = sprintf($notificationFormat, $productsCount, $deliveryDateTime->format('H:i'));
                 $restaurateur->sendNotification('Nuovo ordine', $notificationMessage);
 
-                $message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];
+                $message = $order;
+                //$message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];
                 $code = HttpResponseCode::OK;
             }
             else {
