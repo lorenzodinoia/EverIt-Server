@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\HttpResponseCode;
+use App\Notification;
 use App\Order;
 use App\Product;
 use App\Restaurateur;
@@ -90,7 +91,8 @@ class OrderController extends Controller
                 DB::commit();
                 $notificationFormat = "Hai ricevuto un nuovo ordine di %d prodotti da consegnare alle ore %s";
                 $notificationMessage = sprintf($notificationFormat, $productsCount, $deliveryDateTime->format('H:i'));
-                $restaurateur->sendNotification('Nuovo ordine', $notificationMessage);
+                $restaurateur->sendNotification('Nuovo ordine', $notificationMessage, Notification::ACTION_RES_SHOW_ORDER_DETAIL, ['item_id' => 1]);
+                //TODO Impostare Id dell'ordine
 
                 $message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];
                 $code = HttpResponseCode::OK;
@@ -487,28 +489,36 @@ class OrderController extends Controller
         $order->save();
         $customer = $order->customer()->get()[0];
         if(isset($customer)) {
-            $notificationFormat = "Il tuo ordine da %s sarà consegnato a breve";
-            $notificationMessage = sprintf($notificationFormat, $order->restaurateur()->get()[0]->name);
-            $customer->sendNotification("Ordine in consegna", $notificationMessage);
+            $notificationFormat = "Il tuo ordine per %s sarà consegnato a breve";
+            $notificationMessage = sprintf($notificationFormat, $order->restaurateur()->get()[0]->shop_name);
+            $customer->sendNotification("Ordine in consegna", $notificationMessage, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order->id]);
         }
     }
 
+
     public function markAsConfirmed($idOrder){
         $restaurateur = Auth::guard('restaurateur')->user();
-        if(isset($restaurateur)){
+        if(isset($restaurateur)) {
             $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
-            if(isset($order[0])){
+            if(isset($order[0])) {
                 $order[0]->status = Order::STATUS_ACCEPTED;
                 $order[0]->save();
                 $message = $order[0];
                 $code = HttpResponseCode::OK;
+
+                $customer = $order[0]->customer()->get()[0];
+                if(isset($customer)) {
+                    $notificationFormat = "Il tuo ordine per %s è stato accettato";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
+                    $customer->sendNotification("Ordine accettato", $notificationMessage, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                }
             }
-            else{
+            else {
                 $message = ["message" => "Order not found"];
                 $code = HttpResponseCode::NOT_FOUND;
             }
         }
-        else{
+        else {
             $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
@@ -520,18 +530,25 @@ class OrderController extends Controller
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
             $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
-            if(isset($order[0])){
+            if(isset($order[0])) {
                 $order[0]->late = true;
                 $order[0]->save();
                 $message = $order[0];
                 $code = HttpResponseCode::OK;
+
+                $customer = $order[0]->customer()->get()[0];
+                if(isset($customer)) {
+                    $notificationFormat = "Il tuo ordine per %s subirà dei ritardi";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
+                    $customer->sendNotification("Ordine in ritardo", $notificationMessage, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                }
             }
-            else{
+            else {
                 $message = ["message" => "Order not found"];
                 $code = HttpResponseCode::NOT_FOUND;
             }
         }
-        else{
+        else {
             $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }

@@ -159,7 +159,7 @@ class CustomerController extends Controller
      */
     public function testNotification(Request $request, $id) {
         $customer = Customer::find($id);
-        $result = $customer->sendNotification($request->title, $request->message);
+        $result = $customer->sendNotification($request->title, $request->message, $request->click_action, $request->data);
         return response()->json($result);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HttpResponseCode;
+use App\Notification;
 use App\Order;
 use App\Proposal;
 use App\Restaurateur;
@@ -63,8 +64,8 @@ class ProposalController extends Controller
                     $deleted = $order->proposals()->delete();
                     if ($deleted) {
                         $restaurateur = Restaurateur::find($proposal->restaurateur_id);
-                        $notificationMessage = "E' stato trovato un rider disponibile a cui assegnare l'ordine";
-                        $restaurateur->sendNotification('Rider assegnato', $notificationMessage);
+                        $notificationMessage = "E' stato trovato un rider disponibile a cui assegnare l'ordine n° ".$order->id;
+                        $restaurateur->sendNotification('Rider assegnato', $notificationMessage, Notification::ACTION_RES_SHOW_ORDER_DETAIL, ['item_id' => $order->id]);
                         $message = ['message' => 'Ok'];
                         $code = HttpResponseCode::OK;
                     } else {

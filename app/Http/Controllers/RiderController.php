@@ -179,7 +179,7 @@ class RiderController extends Controller
      */
     public function testNotification(Request $request, $id) {
         $rider = Rider::find($id);
-        $result = $rider->sendNotification($request->title, $request->message);
+        $result = $rider->sendNotification($request->title, $request->message, $request->click_action, $request->data);
         return response()->json($result);
     }
 

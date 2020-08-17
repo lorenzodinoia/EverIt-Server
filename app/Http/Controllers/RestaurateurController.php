@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notification;
 use App\OpeningTime;
 use App\Proposal;
 use App\Restaurateur;
@@ -208,7 +209,7 @@ class RestaurateurController extends Controller
      */
     public function testNotification(Request $request, $id) {
         $customer = Restaurateur::find($id);
-        $result = $customer->sendNotification($request->title, $request->message);
+        $result = $customer->sendNotification($request->title, $request->message, $request->click_action, $request->data);
         return response()->json($result);
     }
 
@@ -246,9 +247,9 @@ class RestaurateurController extends Controller
                     $proposal->order()->associate($idOrder);
                     $proposal->restaurateur()->associate($restaurateur->id);
                     $proposal->save();
-                    $notificationFormat = "Hai ricevuto una proposta di consegna da %s";
-                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
-                    $rider->sendNotification('Proposta consegna', $notificationMessage);
+                    $notificationFormat = "Hai ricevuto una proposta di consegna da %s per le ore %s";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name, $proposal->pickup_time);
+                    $rider->sendNotification('Proposta di lavoro', $notificationMessage, Notification::ACTION_RIDER_SHOW_PROPOSAL_DETAIL, ['item_id' => $proposal->id]);
 
                     $message = ['message' => 'Ok'];
                     $code = HttpResponseCode::OK;

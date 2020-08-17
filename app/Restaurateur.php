@@ -270,11 +270,11 @@ class Restaurateur extends Authenticatable
     /**
      * Send notification to restaurateur's device
      */
-    public function sendNotification($title, $message) {
+    public function sendNotification(string $title, string $message, string $clickAction, $data) {
         $this->makeVisible('device_id');
 
         if(isset($this->device_id)) {
-            $notification = new Notification($this->device_id, $title, $message);
+            $notification = new Notification($this->device_id, $title, $message, $clickAction, $data);
             $result = $notification->send()['success'];
             if($result == 1) {
                 $result = true;
