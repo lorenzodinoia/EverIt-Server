@@ -64,7 +64,9 @@ class OrderController extends Controller
                     $order->validation_code = (string)rand(10000, 99999);//Generates 5 digits number as validation code
                     $order->latitude = $request->latitude;
                     $order->longitude = $request->longitude;
-                    $order->status = 1;
+                    $order->status = 0;
+                    $order->late = false;
+                    $order->order_type = $request->order_type;
                     $order->customer()->associate($customer->id);
                     $order->restaurateur()->associate($restaurateur);
                     $order->save();
@@ -94,7 +96,8 @@ class OrderController extends Controller
                 $restaurateur->sendNotification('Nuovo ordine', $notificationMessage, Notification::ACTION_RES_SHOW_ORDER_DETAIL, ['item_id' => 1]);
                 //TODO Impostare Id dell'ordine
 
-                $message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];
+                $message = $order;
+                //$message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];
                 $code = HttpResponseCode::OK;
             }
             else {
