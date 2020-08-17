@@ -69,17 +69,18 @@ class Order extends Model
     public static function checkCreateRequest(Request $request) {
         $rules = [
             'delivery_address' => 'required|string',
-            'estimated_delivery_time' => 'required|date_format:H:i',
+            'estimated_delivery_time' => 'required|date_format:Y-m-d H:i',
             'products.*.id' => 'required|integer',
             'products.*.quantity' => 'integer',
             'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric'
+            'longitude' => 'required|numeric',
+            'order_type' => 'required|integer'
         ];
 
         $message = [
             'required' => ':attribute required',
             'string' => ':attribute must be string',
-            'date_format' => ':attribute must respect time format (H:i)',
+            'date_format' => ':attribute must respect time format (Y-m-d H:i)',
             'integer' => ':attribute must be integer',
             'numeric' => ':attribure must be numeric'
         ];

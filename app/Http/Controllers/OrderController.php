@@ -63,7 +63,8 @@ class OrderController extends Controller
                     $order->validation_code = (string)rand(10000, 99999);//Generates 5 digits number as validation code
                     $order->latitude = $request->latitude;
                     $order->longitude = $request->longitude;
-                    $order->status = 1;
+                    $order->status = 0;
+                    $order->order_type = $request->order_type;
                     $order->customer()->associate($customer->id);
                     $order->restaurateur()->associate($restaurateur);
                     $order->save();

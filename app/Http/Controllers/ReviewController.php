@@ -153,17 +153,4 @@ class ReviewController extends Controller
         return response()->json($message, $code);
     }
 
-    public function getAvgRatingRestaurateur($idRestaurateur){
-        $restaurateur = Restaurateur::find($idRestaurateur);
-        if(isset($restaurateur)){
-            $count = 0.0;
-            $reviews = $restaurateur->reviews()->get();
-            $n = sizeof($reviews);
-            foreach($reviews as $review){
-                $count += $review->vote;
-            }
-
-            return round($count/$n);
-        }
-    }
 }
