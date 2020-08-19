@@ -7,6 +7,8 @@ use App\Notification;
 use App\Order;
 use App\Proposal;
 use App\Restaurateur;
+use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
@@ -105,6 +107,39 @@ class ProposalController extends Controller
                     $message = ['message' => "Can't delete proposal"];
                     $code = HttpResponseCode::SERVER_ERROR;
                 }
+            }
+        }
+        else{
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function checkOrderProposal($idOrder){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $order = $restaurateur->orders()->where('orders.id', '=', $idOrder)->get();
+            if (isset($order[0])){
+                $dateTimeNow = Carbon::now()->toDateTimeString();
+                $minutes = 5;
+                $condition = sprintf("timestampdiff(MINUTE, created_at, '%s') <= %d", $dateTimeNow, $minutes);
+                $proposals = $order[0]->proposals()->whereRaw($condition)->get();
+                if(!isset($proposals[0])){
+                    $condition = sprintf("timestampdiff(MINUTE, created_at, '%s') >= %d", $dateTimeNow, $minutes);
+                    $order[0]->proposals()->whereRaw($condition)->delete();
+                    $message = ['message' => false];
+                    $code = HttpResponseCode::OK;
+                }
+                else{
+                    $message = ['message' => true];
+                    $code = HttpResponseCode::OK;
+                }
+            }
+            else{
+                $message = ['message' => 'Order not found'];
+                $code = HttpResponseCode::NOT_FOUND;
             }
         }
         else{

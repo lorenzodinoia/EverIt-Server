@@ -235,7 +235,7 @@ class RestaurateurController extends Controller
         return response()->json($message, $code);
     }
 
-    public function searchRider($idOrder){
+    public function searchRider($idOrder, Request $request){
         $radius = 3;
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
@@ -243,6 +243,7 @@ class RestaurateurController extends Controller
             if(isset($riders[0])){
                 foreach($riders as $rider){
                     $proposal = new Proposal();
+                    $proposal->pickup_time = $request->pickup_time;
                     $proposal->riders()->associate($rider->id);
                     $proposal->order()->associate($idOrder);
                     $proposal->restaurateur()->associate($restaurateur->id);

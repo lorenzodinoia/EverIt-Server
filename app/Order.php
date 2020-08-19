@@ -12,7 +12,8 @@ class Order extends Model
     const STATUS_ACCEPTED = 1;
     const STATUS_IN_PROGRESS = 2;
     const STATUS_DELIVERING = 3;
-    const STATUS_DELIVERED = 4;
+    const STATUS_READY = 4;
+    const STATUS_DELIVERED = 5;
 
     protected $with = ["products"];
     protected $casts = [

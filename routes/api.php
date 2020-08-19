@@ -107,6 +107,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::get(RESTAURATEUR.ORDER.'/{id}', 'OrderController@readAsRestaurateur');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/searchRider', 'RestaurateurController@searchRider');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsConfirmed', 'OrderController@markAsConfirmed');
+    Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsInProgress', 'OrderController@markAsInProgress');
+    Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsReady', 'OrderController@markAsReady');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsLate', 'OrderController@markAsLate');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
@@ -122,6 +124,8 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::delete(RESTAURATEUR.OPENING_TIMES.'/{id}', 'OpeningTimeController@delete');
 
     Route::get(RESTAURATEUR.REVIEW.'/all', 'ReviewController@readRestaurateurReviews');
+
+    Route::get(RESTAURATEUR.ORDER.'/{idOrder}'.PROPOSAL, 'ProposalController@checkOrderProposal');
 });
 
 /*

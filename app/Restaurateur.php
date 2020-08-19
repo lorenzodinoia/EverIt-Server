@@ -67,11 +67,22 @@ class Restaurateur extends Authenticatable
     }
 
     public function toDoOrders() {
-        return $this->orders()->where('status', 1);
+        return $this->orders()->where('status', '=',1)
+            ->orWhere('status', '=', 2)
+            ->orWhere('status', '=', 4);
     }
 
+    /*public function deliveringOrders(){
+        return $this->orders()->where('status', '=', 3);
+    }
+
+    public function readyOrders(){
+        return $this->orders()->where('status', '=', 4);
+    }*/
+
     public function deliveredOrders() {
-        return $this->orders()->where('status', '>=', 2);
+        return $this->orders()->where('status', '=', 5)
+            ->orWhere('status', '=', 3);
     }
 
     public function openingTimes(){

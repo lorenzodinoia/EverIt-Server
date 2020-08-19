@@ -529,6 +529,66 @@ class OrderController extends Controller
         return response()->json($message, $code);
     }
 
+    public function markAsInProgress($idOrder){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)) {
+            $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
+            if(isset($order[0])) {
+                $order[0]->status = Order::STATUS_IN_PROGRESS;
+                $order[0]->save();
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+
+                $customer = $order[0]->customer()->get()[0];
+                if(isset($customer)) {
+                    $notificationFormat = "Il tuo ordine per %s è in preparazione";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
+                    $customer->sendNotification("Ordine in preparazione", $notificationMessage, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                }
+            }
+            else {
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else {
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function markAsReady($idOrder){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)) {
+            $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
+            if(isset($order[0])) {
+                $order[0]->status = Order::STATUS_READY;
+                $order[0]->save();
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+
+                $customer = $order[0]->customer()->get()[0];
+                if(isset($customer)) {
+                    $notificationFormat = "Il tuo ordine per %s è pronto al ritiro";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
+                    $customer->sendNotification("Ordine pronto", $notificationMessage, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                }
+            }
+            else {
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else {
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
     public function markAsLate($idOrder){
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)){
