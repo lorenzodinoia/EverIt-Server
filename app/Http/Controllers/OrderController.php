@@ -11,10 +11,12 @@ use App\Restaurateur;
 use DateInterval;
 use DateTime;
 use http\Exception;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 /*
  * Status order legend
@@ -264,7 +266,7 @@ class OrderController extends Controller
             })->orderBy('opening_time')->get();
 
             if((isset($openingTimes)) && (count($openingTimes) >= 1)) {
-                $message = array();
+                $generatedTimes = array();
                 foreach($openingTimes as $time) {
                     $start = new DateTime($time->opening_time);
                     $start->setDate($nowYear, $nowMonth, $nowDay);
@@ -312,16 +314,56 @@ class OrderController extends Controller
 
                     for($i = 0; $i < $count; $i++) {
                         //Generates the delivery times
-                        $newTime = $start->add(new DateInterval('PT30M'))->format('H:i');
-                        array_push($message, $newTime);
+                        $newTime = $start->add(new DateInterval('PT30M'))->format('Y-m-d H:i');
+                        array_push($generatedTimes, $newTime);
                     }
                 }
 
-                if(count($message) == 0) {
+                DB::beginTransaction();
+                try {
+                    Schema::create('available_times', function (Blueprint $table) {
+                        $table->datetime('available_time');
+                        $table->temporary();
+                    });
+                    $temporaryData = array();
+                    foreach($generatedTimes as $time) {
+                        array_push($temporaryData, ['available_time' => $time]);
+                    }
+                    DB::table('available_times')->insert($temporaryData);
+
+                    $result = DB::table('orders')
+                                ->selectRaw("available_time, COUNT(id) AS orders_count")
+                                ->rightJoin('available_times', 'estimated_delivery_time', '=', 'available_time')
+                                ->where('restaurateur_id', $restaurateur->id)
+                                ->orWhereNull('restaurateur_id')
+                                ->groupBy('available_time')
+                                ->having('orders_count', '<=', $restaurateur->max_delivery_time_slot)
+                                ->orderBy('available_time')
+                                ->get();
+                    $generatedTimes = array_column($result->toArray(), 'available_time');
+
+                    foreach($generatedTimes as &$time) {
+                        $temp = new DateTime($time);
+                        $time = $temp->format('H:i');
+                    }
+
+                    Schema::drop('available_times');
+
+                    DB::commit();
+                }
+                catch (\Exception $e) {
+                    DB::rollBack();
+                    $message = ['message' => $e->getMessage()];
+                    $code = HttpResponseCode::SERVER_ERROR;
+                    return response()->json($message, $code);
+                }
+
+                if(count($generatedTimes) == 0) {
                     $message = ['message' => 'No times available'];
                     $code = HttpResponseCode::NO_CONTENT;
                 }
                 else {
+                    $message = $generatedTimes;
                     $code = HttpResponseCode::OK;
                 }
             }
