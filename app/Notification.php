@@ -38,7 +38,8 @@ class Notification {
 
         $fields = array (
             "to" => $this->deviceId,
-            "notification" => $message
+            "notification" => $message,
+            "android" => ["priority" => "high"]
         );
 
         if(isset($this->data)) {
