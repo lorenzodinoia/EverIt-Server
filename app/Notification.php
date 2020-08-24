@@ -27,23 +27,20 @@ class Notification {
     }
 
     private function initCurl() {
-        $message = array (
-            "title" => $this->title,
-            "body" => $this->message
-        );
-
-        if(isset($this->clickAction)) {
-            $message['click_action'] = $this->clickAction;
-        }
-
         $fields = array (
             "to" => $this->deviceId,
-            "notification" => $message,
             "android" => ["priority" => "high"]
         );
 
+        $fields['data']['title'] = $this->title;
+        $fields['data']['message'] = $this->title;
         if(isset($this->data)) {
-            $fields['data'] = $this->data;
+            foreach($this->data as $key => $value) {
+                $fields['data'][$key] = $value;
+            }
+        }
+        if(isset($this->clickAction)) {
+            $fields['data']['click_action'] = $this->clickAction;
         }
 
         $headers = array(
