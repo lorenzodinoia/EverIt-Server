@@ -673,8 +673,8 @@ class OrderController extends Controller
                     $code = HttpResponseCode::OK;
                 }
                 else{
-                    $message = ["message" => "Wrong code"];
-                    $code = HttpResponseCode::BAD_REQUEST;
+                    $message = ["message" => false];
+                    $code = HttpResponseCode::OK;
                 }
             }
             else{
