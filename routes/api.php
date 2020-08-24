@@ -110,6 +110,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsInProgress', 'OrderController@markAsInProgress');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsReady', 'OrderController@markAsReady');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsLate', 'OrderController@markAsLate');
+    Route::get(RESTAURATEUR.ORDER.'/{idOrder}/validateCode/{validationCode}', 'OrderController@deliverOrderAsRestaurateur');
 
     Route::post(RESTAURATEUR.PRODUCT_CATEGORY, 'ProductCategoryController@create');
     Route::put(RESTAURATEUR.PRODUCT_CATEGORY.'/{id}', 'ProductCategoryController@update');

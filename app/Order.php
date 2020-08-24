@@ -15,7 +15,7 @@ class Order extends Model
     const STATUS_READY = 4;
     const STATUS_DELIVERED = 5;
 
-    protected $with = ["products"];
+    protected $with = ["products", "customer"];
     protected $casts = [
         'estimated_delivery_time'  => 'datetime:Y-m-d H:i',
         'actual_delivery_time' => 'datetime:Y-m-d H:i',

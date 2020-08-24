@@ -660,4 +660,33 @@ class OrderController extends Controller
 
         return response()->json($message, $code);
     }
+
+    public function deliverOrderAsRestaurateur($idOrder, $validationCode){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $order = $restaurateur->orders()->where('id', '=', $idOrder)->get();
+            if(isset($order[0])){
+                if($order[0]->validation_code == $validationCode){
+                    $order[0]->status = Order::STATUS_DELIVERED;
+                    $order[0]->save();
+                    $message = ["message" => true];
+                    $code = HttpResponseCode::OK;
+                }
+                else{
+                    $message = ["message" => "Wrong code"];
+                    $code = HttpResponseCode::BAD_REQUEST;
+                }
+            }
+            else{
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }
