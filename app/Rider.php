@@ -139,4 +139,16 @@ class Rider extends Authenticatable
         $this->location_update = Carbon::now();
         $this->save();
     }
+
+
+    public function changePassword($oldPassword, $newPassword) {
+        if(Hash::check($oldPassword, $this->makeVisible('password')->password)) {
+            $this->password = $newPassword;
+            $this->makeHidden('password');
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

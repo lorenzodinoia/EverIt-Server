@@ -238,4 +238,32 @@ class RiderController extends Controller
         return response()->json($message, $code);
     }
 
+    public function changePassword(Request $request){
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)) {
+            if (isset($request->old_password) && isset($request->new_password)) {
+                $result = $rider->changePassword($request->old_password, $request->new_password);
+                $rider->removeApiToken();
+                $rider->removeDeviceId();
+                if($result) {
+                    $message = ['message' => 'Ok'];
+                    $code = HttpResponseCode::OK;
+                }
+                else {
+                    $message = ['message' => 'Error'];
+                    $code = HttpResponseCode::BAD_REQUEST;
+                }
+            }
+            else {
+                $message = ['message' => 'Data not provided'];
+                $code = HttpResponseCode::BAD_REQUEST;
+            }
+        }
+        else {
+            $message = ['message' => 'User not recognized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }
