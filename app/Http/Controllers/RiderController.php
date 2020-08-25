@@ -224,8 +224,8 @@ class RiderController extends Controller
         $rider = Auth::guard('rider')->user();
         if(isset($rider)){
             $rider->operating = false;
-            $rider->longitude = null;
-            $rider->latitude = null;
+            $rider->last_longitude = null;
+            $rider->last_latitude = null;
             $rider->save();
             $message = ['message' => 'Service stopped'];
             $code = HttpResponseCode::OK;
