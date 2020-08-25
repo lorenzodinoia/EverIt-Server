@@ -689,4 +689,40 @@ class OrderController extends Controller
 
         return response()->json($message, $code);
     }
+
+    public function readAllDeliveredOrdersAsRider(){
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)){
+            $message = $rider->orders()->where('status', Order::STATUS_DELIVERED)->with(OrderController::RIDER_ORDER_RELATIONSHIP)->orderBy('actual_delivery_time', 'asc')->get();
+            $code = HttpResponseCode::OK;
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function readDeliveredOrdersAsRider($id){
+
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)){
+            $order = $rider->orders()->where('id', '=', $id)->where('status', Order::STATUS_DELIVERED)->with(OrderController::RIDER_ORDER_RELATIONSHIP)->limit(1)->get();
+            if(isset($order[0])){
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+            }
+            else{
+                $message = ['message' => 'Order not found'];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
 }

@@ -160,6 +160,9 @@ Route::middleware(['auth:rider'])->group(function () {
 
     Route::get(RIDER.ORDER.'/deliveries', 'OrderController@readRiderAssignedDeliveries');
     Route::get(RIDER.ORDER.'/deliveries/{id}', 'OrderController@readRiderAssignedDelivery');
+
+    Route::get(RIDER.ORDER.'/delivered', 'OrderController@readAllDeliveredOrdersAsRider');
+    Route::get(RIDER.ORDER.'/delivered/{id}', 'OrderController@readDeliveredOrdersAsRider');
 });
 
 /*
