@@ -12,6 +12,21 @@ use const http\Client\Curl\Features\HTTP2;
 
 class ReviewController extends Controller
 {
+    public function read($id) {
+        $review = Review::with('restaurateur')->find($id);
+
+        if(isset($review)) {
+            $message = $review;
+            $code = HttpResponseCode::OK;
+        }
+        else {
+            $message = ['message' => 'Review not found'];
+            $code = HttpResponseCode::NOT_FOUND;
+        }
+
+        return response()->json($message, $code);
+    }
+
     public function create(Request $request, $idRestaurateur){
         $customer = Auth::guard('customer')->user();
         if(isset($customer)){

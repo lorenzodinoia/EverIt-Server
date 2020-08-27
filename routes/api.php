@@ -175,3 +175,5 @@ Route::get(PRODUCT_CATEGORY, 'ProductCategoryController@readAll');
 Route::get(SHOP_TYPE.'/{id}', 'ShopTypeController@read');
 Route::get(SHOP_TYPE, 'ShopTypeController@readAll');
 
+Route::get(REVIEW.'/{id}', 'ReviewController@read');
+
