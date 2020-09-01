@@ -238,6 +238,21 @@ class RiderController extends Controller
         return response()->json($message, $code);
     }
 
+    public function canRiderStopService() {
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)) {
+            $ordersCount = $rider->orders()->count();
+            $message = ['message' => ($ordersCount == 0)];
+            $code = HttpResponseCode::OK;
+        }
+        else {
+            $message = ['message' => 'Unauthorized'];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
     public function changePassword(Request $request){
         $rider = Auth::guard('rider')->user();
         if(isset($rider)) {

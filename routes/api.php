@@ -140,6 +140,7 @@ Route::post(RIDER.'/{id}/testNotification', 'RiderController@testNotification');
 Route::middleware(['auth:rider'])->group(function () {
     Route::post(RIDER.'/start', 'RiderController@startService');
     Route::post(RIDER.'/stop', 'RiderController@stopService');
+    Route::get(RIDER.'/service/canStop', 'RiderController@canRiderStopService');
     Route::post(RIDER.'/logout', 'RiderController@logout');
     Route::get(RIDER, 'RiderController@readCurrent');
     Route::put(RIDER.'/update', 'RiderController@update');
