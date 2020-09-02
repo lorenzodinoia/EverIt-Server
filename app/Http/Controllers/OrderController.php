@@ -95,8 +95,7 @@ class OrderController extends Controller
                 DB::commit();
                 $notificationFormat = "Hai ricevuto un nuovo ordine di %d prodotti da consegnare alle ore %s";
                 $notificationMessage = sprintf($notificationFormat, $productsCount, $deliveryDateTime->format('H:i'));
-                $restaurateur->sendNotification('Nuovo ordine', $notificationMessage, Notification::ACTION_RES_SHOW_ORDER_DETAIL, ['item_id' => 1]);
-                //TODO Impostare Id dell'ordine
+                $restaurateur->sendNotification('Nuovo ordine', $notificationMessage, Notification::ACTION_RES_SHOW_ORDER_DETAIL, ['item_id' => $order->id]);
 
                 $message = $order;
                 //$message = Order::find($order->id)->with(OrderController::CUSTOMER_ORDER_RELATIONSHIP)->get()[0];

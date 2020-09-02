@@ -33,7 +33,7 @@ class Notification {
         );
 
         $fields['data']['title'] = $this->title;
-        $fields['data']['message'] = $this->title;
+        $fields['data']['message'] = $this->message;
         if(isset($this->data)) {
             foreach($this->data as $key => $value) {
                 $fields['data'][$key] = $value;
