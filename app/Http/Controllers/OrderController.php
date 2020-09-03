@@ -8,6 +8,7 @@ use App\Notification;
 use App\Order;
 use App\Product;
 use App\Restaurateur;
+use Carbon\Carbon;
 use DateInterval;
 use DateTime;
 use http\Exception;
@@ -667,7 +668,13 @@ class OrderController extends Controller
             if(isset($order[0])){
                 if($order[0]->validation_code == $validationCode){
                     $order[0]->status = Order::STATUS_DELIVERED;
+                    $order[0]->actual_delivery_time = Carbon::now()->format('Y-m-d H:i');
                     $order[0]->save();
+                    $customer = $order[0]->customer()->get()[0];
+                    if(isset($customer)) {
+                        $body = sprintf("Il tuo ordine N° %d è stato consegnato", $order[0]->id);
+                        $customer->sendNotification("Ordine consegnato", $body, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                    }
                     $message = ["message" => true];
                     $code = HttpResponseCode::OK;
                 }
@@ -682,6 +689,41 @@ class OrderController extends Controller
             }
         }
         else{
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function deliverOrderAsRider($idOrder, $validationCode) {
+        $rider = Auth::guard('rider')->user();
+        if(isset($rider)) {
+            $order = $rider->orders()->where('id', '=', $idOrder)->get();
+            if(isset($order[0])){
+                if($order[0]->validation_code == $validationCode){
+                    $order[0]->status = Order::STATUS_DELIVERED;
+                    $order[0]->actual_delivery_time = Carbon::now()->format('Y-m-d H:i');
+                    $order[0]->save();
+                    $customer = $order[0]->customer()->get()[0];
+                    if(isset($customer)) {
+                        $body = sprintf("Il tuo ordine N° %d è stato consegnato", $order[0]->id);
+                        $customer->sendNotification("Ordine consegnato", $body, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                    }
+                    $message = ["message" => true];
+                    $code = HttpResponseCode::OK;
+                }
+                else {
+                    $message = ["message" => false];
+                    $code = HttpResponseCode::OK;
+                }
+            }
+            else {
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else {
             $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }

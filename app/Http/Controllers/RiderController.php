@@ -241,7 +241,7 @@ class RiderController extends Controller
     public function canRiderStopService() {
         $rider = Auth::guard('rider')->user();
         if(isset($rider)) {
-            $ordersCount = $rider->orders()->count();
+            $ordersCount = $rider->orders()->where('status', '!=', Order::STATUS_DELIVERED)->count();
             $message = ['message' => ($ordersCount == 0)];
             $code = HttpResponseCode::OK;
         }

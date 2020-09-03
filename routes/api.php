@@ -164,6 +164,8 @@ Route::middleware(['auth:rider'])->group(function () {
 
     Route::get(RIDER.ORDER.'/delivered', 'OrderController@readAllDeliveredOrdersAsRider');
     Route::get(RIDER.ORDER.'/delivered/{id}', 'OrderController@readDeliveredOrdersAsRider');
+
+    Route::get(RIDER.ORDER.'/{idOrder}/validateCode/{validationCode}', 'OrderController@deliverOrderAsRider');
 });
 
 /*
