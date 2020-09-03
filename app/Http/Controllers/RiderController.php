@@ -258,14 +258,14 @@ class RiderController extends Controller
         if(isset($rider)) {
             if (isset($request->old_password) && isset($request->new_password)) {
                 $result = $rider->changePassword($request->old_password, $request->new_password);
-                $rider->removeApiToken();
-                $rider->removeDeviceId();
                 if($result) {
+                    $rider->removeApiToken();
+                    $rider->removeDeviceId();
                     $message = ['message' => 'Ok'];
                     $code = HttpResponseCode::OK;
                 }
                 else {
-                    $message = ['message' => 'Error'];
+                    $message = ['message' => "The password doesn't match"];
                     $code = HttpResponseCode::BAD_REQUEST;
                 }
             }
@@ -275,7 +275,7 @@ class RiderController extends Controller
             }
         }
         else {
-            $message = ['message' => 'User not recognized'];
+            $message = ['message' => 'Unauthorized'];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

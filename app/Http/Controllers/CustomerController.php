@@ -168,14 +168,14 @@ class CustomerController extends Controller
         if(isset($customer)) {
             if (isset($request->old_password) && isset($request->new_password)) {
                 $result = $customer->changePassword($request->old_password, $request->new_password);
-                $customer->removeApiToken();
-                $customer->removeDeviceId();
                 if($result) {
+                    $customer->removeApiToken();
+                    $customer->removeDeviceId();
                     $message = ['message' => 'Ok'];
                     $code = HttpResponseCode::OK;
                 }
                 else {
-                    $message = ['message' => 'Error'];
+                    $message = ['message' => "The password doesn't match"];
                     $code = HttpResponseCode::BAD_REQUEST;
                 }
             }
@@ -185,7 +185,7 @@ class CustomerController extends Controller
             }
         }
         else {
-            $message = ['message' => 'User not recognized'];
+            $message = ['message' => 'Unauthorized'];
             $code = HttpResponseCode::UNAUTHORIZED;
         }
 

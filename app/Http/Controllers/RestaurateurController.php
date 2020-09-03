@@ -346,14 +346,14 @@ class RestaurateurController extends Controller
         if(isset($restaurateur)){
             if(isset($request->old_password) && isset($request->new_password)){
                 $result = $restaurateur->changePassword($request->old_password, $request->new_password);
-                $restaurateur->removeApiToken();
-                $restaurateur->removeDeviceId();
                 if($result) {
+                    $restaurateur->removeApiToken();
+                    $restaurateur->removeDeviceId();
                     $message = ['message' => 'Ok'];
                     $code = HttpResponseCode::OK;
                 }
                 else {
-                    $message = ['message' => 'Error'];
+                    $message = ['message' => "The password doesn't match"];
                     $code = HttpResponseCode::BAD_REQUEST;
                 }
             }
