@@ -359,8 +359,8 @@ class OrderController extends Controller
                 }
 
                 if(count($generatedTimes) == 0) {
-                    $message = ['message' => 'No times available'];
-                    $code = HttpResponseCode::NO_CONTENT;
+                    $message = $generatedTimes;
+                    $code = HttpResponseCode::OK;
                 }
                 else {
                     $message = $generatedTimes;
@@ -368,8 +368,8 @@ class OrderController extends Controller
                 }
             }
             else {
-                $message = ['message' => 'The restaurant is closed today'];
-                $code = HttpResponseCode::NO_CONTENT;
+                $message = [];
+                $code = HttpResponseCode::OK;
             }
         }
         else {
