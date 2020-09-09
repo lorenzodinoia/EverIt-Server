@@ -50,7 +50,7 @@ class Customer extends Authenticatable
             'surname' => 'required|string|between:1,50',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
-            'password' => 'required|string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+            'password' => 'required|string|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*.,-]).{8,16}$/',
         ];
         $message = [
           'required' => ':attribute required',
@@ -72,7 +72,7 @@ class Customer extends Authenticatable
             'surname' => 'required|string|between:1,50',
             'phone_number' => 'required|string|between:1,15',
             'email' => 'required|email',
-            'password' => 'string|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+            'password' => 'string|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*.,-]).{8,16}$/',
         ];
         $message = [
             'required' => ':attribute required',
