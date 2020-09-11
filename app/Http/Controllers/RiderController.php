@@ -89,7 +89,6 @@ class RiderController extends Controller
                 $rider->surname = $newData->surname;
                 $rider->phone_number = $newData->phone_number;
                 $rider->email = $newData->email;
-                $rider->password = $newData->password;
 
                 $rider->save();
 

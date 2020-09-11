@@ -68,7 +68,6 @@ class CustomerController extends Controller
                 $customer->surname = $newData->surname;
                 $customer->phone_number = $newData->phone_number;
                 $customer->email = $newData->email;
-                $customer->password = $newData->password;
 
                 $customer->save();
 

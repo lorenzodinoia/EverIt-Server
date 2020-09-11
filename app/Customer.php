@@ -71,15 +71,13 @@ class Customer extends Authenticatable
             'name' => 'required|string|between:1,50',
             'surname' => 'required|string|between:1,50',
             'phone_number' => 'required|string|between:1,15',
-            'email' => 'required|email',
-            'password' => 'string|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*.,-]).{8,16}$/',
+            'email' => 'required|email'
         ];
         $message = [
             'required' => ':attribute required',
             'string' => ':attribute must be string',
             'between' => ':attribute must be between :min and :max',
-            'email' => ':attribute must respect email standard',
-            'regex' => ':attribute must respect format'
+            'email' => ':attribute must respect email standard'
         ];
 
         return Validator::make($request->all(), $rules, $message);

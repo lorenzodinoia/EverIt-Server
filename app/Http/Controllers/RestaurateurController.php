@@ -106,9 +106,6 @@ class RestaurateurController extends Controller
                 $restaurateur->address = $newData->address;
                 $restaurateur->phone_number = $newData->phone_number;
                 $restaurateur->email = $newData->email;
-                if(isset($newData->password)) {
-                    $restaurateur->password = $newData->password;
-                }
                 $restaurateur->vat_number = $newData->vat_number;
                 $restaurateur->delivery_cost = $newData->delivery_cost;
                 if(isset($newData->min_price)) {
