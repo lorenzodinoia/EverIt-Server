@@ -4,10 +4,12 @@ namespace App;
 
 use Carbon\Carbon;
 use Carbon\Traits\Date;
+use DateInterval;
 use DateTime;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +105,11 @@ class Restaurateur extends Authenticatable
                         try {
                             $openingTime = new DateTime($time->opening_time);
                             $closingTime = new DateTime($time->closing_time);
+                            $openingHour = $openingTime->format('H');
+                            $closingHour = $closingTime->format('H');
+                            if ($closingHour < $openingHour) {
+                                $closingTime->add(new DateInterval('P1D'));
+                            }
                         }
                         catch (\Exception $e) {
                             return false;
