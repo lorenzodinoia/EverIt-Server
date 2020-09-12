@@ -22,10 +22,13 @@ use Illuminate\Support\Facades\Schema;
 /*
  * Status order legend
  *  -1 order issue
- *  0 not ordered
- *  1 under processing
- *  2 delivering
- *  3 delivered
+ *  0 ordered
+ *  1 confirmed
+ *  2 in progress
+ *  3 delivering
+ *  4 ready
+ *  5 delivered
+ *  6 refused
  */
 class OrderController extends Controller
 {
@@ -564,6 +567,36 @@ class OrderController extends Controller
             }
         }
         else {
+            $message = ["message" => "Unauthorized"];
+            $code = HttpResponseCode::UNAUTHORIZED;
+        }
+
+        return response()->json($message, $code);
+    }
+
+    public function markAsRefused($idOrder){
+        $restaurateur = Auth::guard('restaurateur')->user();
+        if(isset($restaurateur)){
+            $order = $restaurateur->orders()->where('orders.id', $idOrder)->get();
+            if(isset($order[0])){
+                $order[0]->status = Order::STATUS_REFUSED;
+                $order[0]->save();
+                $message = $order[0];
+                $code = HttpResponseCode::OK;
+
+                $customer = $order[0]->customer()->get()[0];
+                if(isset($customer)){
+                    $notificationFormat = "Il tuo ordine per %s è stato rifiutato";
+                    $notificationMessage = sprintf($notificationFormat, $restaurateur->shop_name);
+                    $customer->sendNotification("Ordine rifiutato", $notificationMessage, Notification::ACTION_CUSTOMER_SHOW_ORDER_DETAIL, ['item_id' => $order[0]->id]);
+                }
+            }
+            else{
+                $message = ["message" => "Order not found"];
+                $code = HttpResponseCode::NOT_FOUND;
+            }
+        }
+        else{
             $message = ["message" => "Unauthorized"];
             $code = HttpResponseCode::UNAUTHORIZED;
         }

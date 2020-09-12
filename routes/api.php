@@ -107,6 +107,7 @@ Route::middleware(['auth:restaurateur'])->group(function () {
     Route::get(RESTAURATEUR.ORDER.'/{id}', 'OrderController@readAsRestaurateur');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/searchRider', 'RestaurateurController@searchRider');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsConfirmed', 'OrderController@markAsConfirmed');
+    Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsRefused', 'OrderController@markAsRefused');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsInProgress', 'OrderController@markAsInProgress');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsReady', 'OrderController@markAsReady');
     Route::post(RESTAURATEUR.ORDER.'/{idOrder}/markAsLate', 'OrderController@markAsLate');

@@ -14,6 +14,7 @@ class Order extends Model
     const STATUS_DELIVERING = 3;
     const STATUS_READY = 4;
     const STATUS_DELIVERED = 5;
+    const STATUS_REFUSED = 6;
 
     protected $with = ["products", "customer"];
     protected $casts = [
