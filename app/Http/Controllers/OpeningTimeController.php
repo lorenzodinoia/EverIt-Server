@@ -8,6 +8,7 @@ use App\OpeningTime;
 use App\Restaurateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class OpeningTimeController extends Controller
 {
@@ -57,9 +58,9 @@ class OpeningTimeController extends Controller
     public function delete($openingTimeId) {
         $restaurateur = Auth::guard('restaurateur')->user();
         if(isset($restaurateur)) {
-            $openingTime = $restaurateur->openingTimes()->where('id', $openingTimeId)->first()->get();
+            $openingTime = $restaurateur->openingTimes()->where('opening_times.id', $openingTimeId)->get()[0];
             if(isset($openingTime)) {
-                $openingTime[0]->delete();
+                $openingTime->delete();
 
                 $message = ['message' => 'Deleted'];
                 $code = HttpResponseCode::OK;
