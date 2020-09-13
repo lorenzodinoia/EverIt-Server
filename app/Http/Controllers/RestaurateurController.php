@@ -366,4 +366,5 @@ class RestaurateurController extends Controller
 
         return response()->json($message, $code);
     }
+
 }
