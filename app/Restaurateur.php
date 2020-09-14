@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class Restaurateur extends Authenticatable
 {
@@ -69,22 +70,18 @@ class Restaurateur extends Authenticatable
     }
 
     public function toDoOrders() {
-        return $this->orders()->where('status', '=',1)
-            ->orWhere('status', '=', 2)
-            ->orWhere('status', '=', 4);
+        return $this->orders()->where(function (Builder $query) {
+            $query->where('status', Order::STATUS_ACCEPTED)
+                ->orWhere('status', Order::STATUS_IN_PROGRESS)
+                ->orWhere('status', ORDER::STATUS_READY);
+        });
     }
-
-    /*public function deliveringOrders(){
-        return $this->orders()->where('status', '=', 3);
-    }
-
-    public function readyOrders(){
-        return $this->orders()->where('status', '=', 4);
-    }*/
 
     public function deliveredOrders() {
-        return $this->orders()->where('status', '=', 5)
-            ->orWhere('status', '=', 3);
+        return $this->orders()->where(function (Builder $query) {
+            $query->where('status', Order::STATUS_DELIVERED)
+                ->orWhere('status', Order::STATUS_DELIVERING);
+        });
     }
 
     public function openingTimes(){
